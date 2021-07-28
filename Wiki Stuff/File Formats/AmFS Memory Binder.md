@@ -40,7 +40,7 @@ Address | Description
   0x0E  | `byte unknown4` - This always seems to be `0`
   0x0F  | `byte compressionType` - This flag details the compression method
   
-**?** - Changing this value to a random one doesn't crash game.
+**¹** - Changing this value to a random one doesn't crash game.
 
 ### Here are the identifiers for the AMB versions:
 
@@ -81,7 +81,7 @@ Address | Description
   0x08  | `uint dataPointer` - The pointer to the file data
   0x0C  | `uint nameTable`? - The pointer to the list of names. This CAN be nulled.
 
-**?** - Changing this value to a random one doesn't crash game.
+**¹** - Changing this value to a random one doesn't crash game.
 
 <br></br>
 ## AMB v2
@@ -102,7 +102,7 @@ Address | Description
   0x08  | `uint64 dataPointer` - The pointer to the file data
   0x0C  | `uint64 nameTable`? - The pointer to the list of names. This CAN be nulled.
 
-**?** - Changing this value to a random one doesn't crash game.
+**¹** - Changing this value to a random one doesn't crash game.
 
 <br></br><br></br>
 # File Index
@@ -125,7 +125,7 @@ Address | Description
   0x0C  | `short USR0`? - User 1 Data (Dimps Internal Tool)
   0x0E  | `short USR1`? - User 2 Data (Dimps Internal Tool)
 
-**?** - Changing this value to a random one doesn't crash game.
+**¹** - Changing this value to a random one doesn't crash game.
 
 <br></br>
 ## AMB v2
@@ -149,4 +149,4 @@ Address | Description
   0x0C  | `short USR0`? - User 1 Data (Dimps Internal Tool)
   0x0E  | `short USR1`? - User 2 Data (Dimps Internal Tool)
 
-**?** - Changing this value to a random one doesn't crash game.
+**¹** - Changing this value to a random one doesn't crash game.
