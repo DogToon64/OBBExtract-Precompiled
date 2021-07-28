@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DimpsLib", "DimpsLib\DimpsLib.csproj", "{AFE1FCEB-E13E-42FF-9912-07D5A4DF90DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DimpsSonicLib", "DimpsSonicLib\DimpsSonicLib.csproj", "{AFE1FCEB-E13E-42FF-9912-07D5A4DF90DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SonicTools", "SonicTools", "{AF698516-0558-4AEE-B039-B00DF28337C1}"
 EndProject

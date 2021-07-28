@@ -51,9 +51,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DimpsLib\DimpsLib.csproj">
+    <ProjectReference Include="..\..\DimpsSonicLib\DimpsSonicLib.csproj">
       <Project>{afe1fceb-e13e-42ff-9912-07d5a4df90dc}</Project>
-      <Name>DimpsLib</Name>
+      <Name>DimpsSonicLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
