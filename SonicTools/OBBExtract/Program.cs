@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
+using DimpsLib;
+using DimpsLib.Archives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DimpsLib;
-using System.IO;
 
 namespace OBBExtract
 {
@@ -33,12 +34,12 @@ namespace OBBExtract
                     var arg = args[0];
                     if (File.Exists(arg))
                     {
-                        var Type = Functions.DetermineOBBType(arg);
+                        var Type = AndroidOBB.DetermineOBBType(arg);
 
-                        if (Type != Functions.OBBType.NotOBB)
+                        if (Type != AndroidOBB.OBBType.NotOBB)
                         {
                             Logger.Print("Unpacking \"" + Path.GetFileName(arg) + "\", Please wait...\n");
-                            Functions.ExtractOBBFile(arg, Type);
+                            AndroidOBB.ExtractOBBFile(arg, Type);
                             Logger.PrintInfo("\nComplete!");
                         }
                         else

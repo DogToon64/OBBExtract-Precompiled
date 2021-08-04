@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DimpsLib;
+using DimpsLib.Archives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

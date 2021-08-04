@@ -4,9 +4,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using DimpsLib.IO;
-using DimpsLib.Headers;
 
-namespace DimpsLib
+namespace DimpsLib.Archives
 {
     public class MemoryBinder
     {

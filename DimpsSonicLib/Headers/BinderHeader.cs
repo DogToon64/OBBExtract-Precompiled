@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DimpsLib.Headers
+namespace DimpsLib.Archives
 {
     public class BinderHeader
     {
