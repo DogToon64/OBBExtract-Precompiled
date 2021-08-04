@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AMBExtract
 {
-    class Functions : Program
+    class Functions
     {
         public static void UnpackAMBFile(string args)
         {
@@ -16,7 +16,7 @@ namespace AMBExtract
             {
                 if (MemoryBinder.CheckSignature(stream))
                 {
-                    MemoryBinder.ReadHeader(stream);
+                    // Do stuff
                 }
                 else
                 {
@@ -27,7 +27,7 @@ namespace AMBExtract
 
         public static void PackAMBFile(string args)
         {
-            throw new NotImplementedException();
+            Logger.PrintError("PackAMBFile Not Implemented\n");
         }
     }
 }

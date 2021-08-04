@@ -23,7 +23,7 @@ namespace DimpsLib
         public static void ReadHeader(Stream input)
         {
             var reader = new ExtendedBinaryReader(input, false);
-            Logger.PrintWarning("Not Implemented\n");
+            Logger.PrintError("Not Implemented\n");
         }
 
 

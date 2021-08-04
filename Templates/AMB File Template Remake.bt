@@ -1,0 +1,113 @@
+//------------------------------------------------
+//  010 Editor v11.0.1 Binary Template
+//  Author: Based off spec from OSA413, Extended by Kass(RadiantDerg) 2021-07-27
+//  Dimps AmFS: Memory Binder (.AMB)
+//  Data is little endian(PC, 3DS) big endian(Console) !!!NOT SUPPORT WINPHONE!!!
+//------------------------------------------------
+#include "AMBStructs.h"
+
+///   Check Endianness   ///
+FSeek(12); ubyte flag<hidden=true>;
+
+if (flag)
+    BigEndian();
+else
+    LittleEndian();
+
+FSeek(0);
+////    ////    ////    ////
+
+// = = = = = Globals = = = = =
+//local vars are hidden since I personally show locals in template results
+local uint   g_version                          <hidden=true>;
+local byte   g_compressionType                  <hidden=true>;
+
+local uint   g_fileCount                        <hidden=true>;
+local uint   g_listPointer                      <hidden=true>;
+local uint   g_dataPointer                      <hidden=true>;
+local uint   g_nameTable                        <hidden=true>;
+
+local uint   g_filePointer                      <hidden=true>;
+local uint   g_fileSize                         <hidden=true>;
+// = = = = = Globals = = = = =
+
+
+// = = = = = = = Structs = = = = = = = =
+
+typedef struct BinderData
+{
+    local int   i         <hidden=true>;
+    local int64 lastpos   <hidden=true> = FTell();
+    local int   nameOffset<hidden=true>;
+    
+    for(i = 0; i < g_fileCount; i++)
+    {
+        struct
+        {
+            if(g_nameTable != 0)
+            {
+                lastpos = FTell();
+                FSeek(g_nameTable+nameOffset);
+                char FileName[32]               <name="File Name", fgcolor=0xA5A5A5, bgcolor=cDkYellow, comment="DIMPS EDITOR ONLY">;
+                nameOffset = nameOffset + 32;
+                FSeek(lastpos);
+            }
+			
+            if (g_version == 32)
+				FileIndexData a                 <name="Index Data", bgcolor=cAqua>;
+			else if (g_version == 40)
+				FileIndexDataRev1 a              <name="Index Data", bgcolor=cAqua>;
+			else if (g_version == 48)
+				FileIndexDataRev2 a              <name="Index Data", bgcolor=cAqua>;
+			
+            lastpos = FTell();
+ 
+            if (g_fileSize != 0)
+            {
+                FSeek(g_filePointer);
+                FileData a(g_fileSize)          <name="File Data", bgcolor=cDkGreen>;
+            }
+            
+            FSeek(lastpos);
+
+        }FileInfo<name="File">;
+    }
+};
+
+// = = = = = = = Structs = = = = = = = =
+
+
+///   File Start   ///
+
+Header a                                        <name="Header">;
+
+if (g_version == 32)
+{
+    SubHeader b                                 <name="Sub Header", bgcolor=cSilver>;
+    FSeek(g_listPointer);
+    
+    if (!g_compressionType)
+        BinderData c                            <name="Contents">;
+    else
+        CompressedBinder z(fileLength-20)       <name="Contents (Compressed)", bgcolor=cDkGreen>;
+}
+else if (g_version == 40)
+{
+    SubHeaderRev1 b                              <name="Sub Header", bgcolor=cSilver>;
+    FSeek(g_listPointer);
+    
+    if (!g_compressionType)
+        BinderData c                            <name="Contents">;
+    else
+        CompressedBinder z(fileLength-20)       <name="Contents (Compressed)", bgcolor=cDkGreen>;
+}
+else if (g_version == 48)
+{
+    SubHeaderRev2 b                              <name="Sub Header", bgcolor=cSilver>;
+    FSeek(g_listPointer);
+
+    if (!g_compressionType)
+        BinderData c                            <name="Contents">;
+    else
+        CompressedBinder z(fileLength-20)       <name="Contents (Compressed)", bgcolor=cDkGreen>;
+}

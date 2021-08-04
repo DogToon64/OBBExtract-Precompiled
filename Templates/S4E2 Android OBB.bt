@@ -1,0 +1,152 @@
+//------------------------------------------------
+//  010 Editor v11.0.1 Binary Template
+//  Author: Kass(RadiantDerg) 2021-07-25
+//  Sonic 4 Episode 2 Android APK Expansion File (.obb)
+//  Please note this template has only been tested on versions 10050081 and 10050090
+//  This means this template will only work on the classic (non-Sega Ages) verions
+//  Adding support for the new versions shouldn't be too difficult, however.
+//  Data is little endian
+//------------------------------------------------
+LittleEndian();
+
+// = = = = = Globals = = = = =
+local ushort g_numFiles                         <hidden=true>;
+local ushort g_numDir                           <hidden=true>;
+local uint   g_unkDataPtr                       <hidden=true>;
+local uint   g_unkDataLen                       <hidden=true>;
+local uint   g_fileIndexPtr                     <hidden=true>;
+local uint   g_nameTblPtr                       <hidden=true>;
+local uint   g_nameTblLen                       <hidden=true>;
+
+local uint   g_filePtr                          <hidden=true>;
+local uint   g_fileSize                         <hidden=true>;
+local ushort g_dirID                            <hidden=true>;
+local ushort g_nameID                           <hidden=true>;
+// = = = = = Globals = = = = =
+
+
+// = = = = = = = Structs = = = = = = = =
+
+typedef struct Header
+{
+    char   Signature[4]                         <name="Signature", bgcolor=cWhite>;
+    ushort idk1                                 <name="Unknown", bgcolor=cSilver, hidden=true>;
+    ushort numFiles                             <name="File Count", bgcolor=cSilver>;
+    ushort numDir                               <name="Directory Count", bgcolor=cSilver>;
+    ushort idk2                                 <name="Unknown", bgcolor=cSilver, hidden=true>;
+    uint   unkDataPtr                           <name="Unknown Data Pointer", bgcolor=cSilver>;
+    uint   unkDataLen                           <name="Unknown Data Length", bgcolor=cSilver>;
+    uint   fileIndexPtr                         <name="File Index Pointer", bgcolor=cSilver>;
+    uint   nameTblPtr                           <name="Name Table Pointer", bgcolor=cSilver>;
+    uint   nameTblLen                           <name="Name Table Length", bgcolor=cSilver>;
+
+    g_numFiles     = numFiles;
+    g_numDir       = numDir;
+    g_unkDataPtr   = unkDataPtr;
+    g_unkDataLen   = unkDataLen;
+    g_fileIndexPtr = fileIndexPtr;
+    g_nameTblPtr   = nameTblPtr;
+    g_nameTblLen   = nameTblLen;
+};
+
+typedef struct FileIndexData
+{
+    uint   filePtr                              <name="File Pointer", bgcolor=cAqua>;
+    uint   fileSize                             <name="File Size", bgcolor=cAqua>;
+    uint   fileSize2                            <name="Redundant Size", bgcolor=cAqua, hidden=true>;
+    ushort dirID                                <name="Directory ID", bgcolor=cAqua>;
+    ushort nameID                               <name="File Name ID", bgcolor=cAqua>;
+    
+    g_filePtr  = filePtr;
+    g_fileSize = fileSize;
+    g_dirID    = dirID;
+    g_nameID   = nameID;
+};
+
+typedef struct FileData (uint dataLength)
+{
+    char fileDataStart <bgcolor=cYellow, hidden=true>;
+    char fileData[dataLength-2] <hidden=true>;
+    char fileDataEnd <bgcolor=cRed, hidden=true>;
+};
+
+typedef struct UnknownData1 (uint chunkSize)
+{
+    char unknownData[chunkSize];
+};
+
+typedef struct NameTData (uint chunkSize)
+{
+    char NameData[chunkSize] <hidden=true>;
+};
+
+typedef struct Name (uint dirID, uint nameID)
+{
+    FSeek(g_nameTblPtr+(dirID*4));
+    uint dirNamePtr                             <hidden=true>;
+    FSeek(g_nameTblPtr+dirNamePtr);
+    string dirName                              <name="Parent Directory">;
+
+    FSeek(g_nameTblPtr+((nameID*4)+(g_numDir*4)));
+    uint fileNamePtr                            <hidden=true>;
+    FSeek(g_nameTblPtr+fileNamePtr);
+    string fileName                             <name="File Name">;
+    
+};
+
+typedef struct OBBData
+{
+    local int i                                 <hidden=true>;
+    local int64 lastIndexPos                    <hidden=true> = FTell();
+
+    UnknownData1 a(g_fileIndexPtr)              <name="Unknown Data Chunk">;
+    
+    for(i = 0; i < g_numFiles; i++)
+    {
+        struct
+        {
+            FileIndexData a                     <name="Index Data">;
+            lastIndexPos = FTell();
+            
+            Name a(g_dirID, g_nameID)           <name="FileSystem Data">;
+            
+            FSeek(g_filePtr);
+            FileData a(g_fileSize)              <name="File Data", bgcolor=cDkGreen>;
+            
+            FSeek(lastIndexPos);
+
+        }FileInfo<name="File">;
+    }
+
+};
+
+// = = = = = = = Structs = = = = = = = =
+
+
+///   File Start   ///
+
+Header a                                        <name="Header">;
+FSeek(0);
+OBBData b                                       <name="Data">;
+FSeek(g_nameTblPtr);
+NameTData c(g_nameTblLen)                       <name="Name/Directory Table", fgcolor=0xA5A5A5, bgcolor=cDkYellow>;
+
+
+
+// === File layout Summary ===
+
+// Header, 32 bytes long consisting of signature"LPK", numFiles(2317),
+// numDir(119), and other pointers/offsets. Also 2 unknown shorts that = 1
+
+// Unknown data chunk with size of unkDataLen in bytes
+
+// File Pointers, each containing 16 bytes per file. uint ptr, uint size[2],
+// ushort dirID, ushort nameID
+
+// <File Data>
+
+// Name/Directory Table. nameID and dirID from fileIndex are offsets based at
+// nameTblPtr to a new offset (once again based at nameTblPtr) where it reads a
+// null-terminated string.
+
+// Unknown footer data

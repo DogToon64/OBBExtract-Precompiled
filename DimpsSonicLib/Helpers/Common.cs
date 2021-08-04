@@ -31,6 +31,13 @@ namespace DimpsLib
             Console.ResetColor();
         }
 
+        public static void PrintInfo(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
         public static void PrintError(string text)
         {
             Console.ForegroundColor = ConsoleColor.Red;
