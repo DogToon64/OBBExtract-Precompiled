@@ -13,7 +13,7 @@ namespace DimpsLib.Archives
         {
             var reader = new ExtendedBinaryReader(input, false);
 
-            if (reader.ReadSignature(4) == BinderHeader.signature)
+            if (reader.ReadSignature(4) == "#AMB")
                 return true;
             else
                 return false;
@@ -25,8 +25,6 @@ namespace DimpsLib.Archives
             Logger.PrintError("Not Implemented\n");
         }
 
-
     }
-
 
 }
