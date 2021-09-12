@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using DimpsLib;
+using DimpsSonicLib;
 
 namespace AMBExtract
 {
@@ -23,7 +23,7 @@ namespace AMBExtract
                 //Unpack AMB file(s)
                 else if (File.Exists(args[0]))
                 {
-                    //change this later to process potential options like SkipIndexCreation, VerifyAMB, ChangeEndian, or UseCompression
+                    //change this later to process potential options like SkipIndexCreation, ChangeEndian, or UseCompression
                     if (args.Length > 1)
                     {
                         foreach (string file in args)
@@ -36,7 +36,7 @@ namespace AMBExtract
                             }
 
                             else
-                                Logger.PrintWarning("A directory or invalid argument was detected, ignoring.\n");
+                                Logger.PrintWarning("A directory was detected, ignoring.\n");
                         }
                     }
                     else
@@ -59,8 +59,10 @@ namespace AMBExtract
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("An error has occured:\n" + ex);
+                //Console.ForegroundColor = ConsoleColor.Red;
+                //Console.WriteLine("An error has occured:\n" + ex.Message);
+
+                Logger.PrintError("An error has occured:\n" + ex.Message.ToString());
             }
             Console.ResetColor();
             Console.ReadLine();

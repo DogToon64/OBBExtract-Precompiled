@@ -30,7 +30,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DimpsLib.IO
+namespace DimpsSonicLib.IO
 {
     public class ExtendedBinaryReader : BinaryReader
     {

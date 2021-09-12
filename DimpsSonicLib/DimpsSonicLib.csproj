@@ -19,7 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <None Remove="Resources\S4T.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\S4T.ico" />
   </ItemGroup>
 
 </Project>

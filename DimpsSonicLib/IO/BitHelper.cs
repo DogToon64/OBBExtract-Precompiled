@@ -30,7 +30,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace DimpsLib.IO
+namespace DimpsSonicLib.IO
 {
     public static class BitHelper
     {

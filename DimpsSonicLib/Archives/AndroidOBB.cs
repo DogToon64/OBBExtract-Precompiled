@@ -1,16 +1,20 @@
 ﻿using System;
-using DimpsLib.IO;
+using DimpsSonicLib.IO;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DimpsLib.Archives
+namespace DimpsSonicLib.Archives
 {
-    //  
-    //  TODO: Clean all this up and use various classes within DimpsSonicLib as well as
-    //  using FileInterface.cs for the OBBType detection. Could also stand to use 
-    //  class inheritance to clean up all of the extra usings
-    //  
+    /* TODO:
+    *   Clean all this up and use various classes within DimpsSonicLib as well as
+    *   using FileInterface.cs for the OBBType detection. Could also stand to use 
+    *   class inheritance to clean up all of the extra usings.
+    *  
+    *   I should instead focus DimpsSonicLib to return arrays and data from the files
+    *   instead of handling everything in the library itself. Methods for handling
+    *   data should be up to the individual programs that reference this library.
+    */
 
     public class AndroidOBB
     {

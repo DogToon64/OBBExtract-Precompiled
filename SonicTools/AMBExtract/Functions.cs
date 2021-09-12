@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using DimpsLib;
-using DimpsLib.Archives;
+using DimpsSonicLib;
+using DimpsSonicLib.Archives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,22 +13,33 @@ namespace AMBExtract
     {
         public static void UnpackAMBFile(string args)
         {
-            using (Stream stream = File.OpenRead(args))
-            {
-                if (MemoryBinder.CheckSignature(stream))
-                {
-                    // Do stuff
-                }
-                else
-                {
-                    Logger.PrintError("Signature failed to verify.\n");
-                }
-            }
+            Stream stream = File.OpenRead(args);
+
+            var header = MemoryBinder.ReadHeader(stream);
+
+            Logger.Print("AMB version:    " + header.version.ToString());
+            Logger.Print("Is big endian?: " + header.isBigEndian.ToString());
+            Console.WriteLine("Compression:    {0}\n", header.compressionType.ToString());
+
+            // Below is not legal code, just shittily brainstorming.
+
+            // var IndexList = IMemoryBinder.ReadFileIndex( stream, type, (endian)false );
+
+            // foreach Item in <IndexList> { IMemoryBinder.ExtractFile( IndexList.Pointer ) }; 
+            // Alternatively... for (int i = 0; i < AMBSubHeader.FileCount, i++) { Archive.Extract(stream, IndexList[i]) };
+
+            // IMemoryBinder.ReadAMB(stream, (isStream)false, (endian)false, ); 
+
         }
 
         public static void PackAMBFile(string args)
         {
             Logger.PrintError("PackAMBFile Not Implemented\n");
+
+            //Try get either index binary or read from original.
+
+            //
+
         }
     }
 }
