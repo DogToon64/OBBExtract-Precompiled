@@ -2,7 +2,7 @@
 //  010 Editor v11.0.1 Binary Template
 //  Author: Based off spec from OSA413, Extended by Kass(RadiantDerg) 2021-07-27
 //  Dimps AmFS: Memory Binder (.AMB)
-//  Data is little endian(PC, 3DS) big endian(Console) !!!NOT SUPPORT WINPHONE!!!
+//  Data is little endian (PC, 3DS) big endian(Console) !!!NOT SUPPORT WINPHONE!!!
 //------------------------------------------------
 #include "AMBStructs.h"
 
@@ -19,6 +19,8 @@ FSeek(0);
 
 // = = = = = Globals = = = = =
 //local vars are hidden since I personally show locals in template results
+local int64  fileLength                         <hidden=true> = FileSize();
+
 local uint   g_version                          <hidden=true>;
 local byte   g_compressionType                  <hidden=true>;
 
@@ -83,31 +85,34 @@ Header a                                        <name="Header">;
 
 if (g_version == 32)
 {
-    SubHeader b                                 <name="Sub Header", bgcolor=cSilver>;
-    FSeek(g_listPointer);
-    
     if (!g_compressionType)
+    {
+        SubHeader b                             <name="Sub Header", bgcolor=cSilver>;
+        FSeek(g_listPointer);
         BinderData c                            <name="Contents">;
+    }
     else
-        CompressedBinder z(fileLength-20)       <name="Contents (Compressed)", bgcolor=cDkGreen>;
+        CompressedBinder z                      <name="Contents (Compressed)", bgcolor=cDkGreen>;
 }
 else if (g_version == 40)
 {
-    SubHeaderRev1 b                              <name="Sub Header", bgcolor=cSilver>;
-    FSeek(g_listPointer);
-    
     if (!g_compressionType)
+    {
+        SubHeaderRev1 b                         <name="Sub Header", bgcolor=cSilver>;
+        FSeek(g_listPointer);
         BinderData c                            <name="Contents">;
+    }
     else
-        CompressedBinder z(fileLength-20)       <name="Contents (Compressed)", bgcolor=cDkGreen>;
+        CompressedBinder z                      <name="Contents (Compressed)", bgcolor=cDkGreen>;
 }
 else if (g_version == 48)
 {
-    SubHeaderRev2 b                              <name="Sub Header", bgcolor=cSilver>;
-    FSeek(g_listPointer);
-
     if (!g_compressionType)
+    {
+        SubHeaderRev2 b                         <name="Sub Header", bgcolor=cSilver>;
+        FSeek(g_listPointer);
         BinderData c                            <name="Contents">;
+    }
     else
-        CompressedBinder z(fileLength-20)       <name="Contents (Compressed)", bgcolor=cDkGreen>;
+        CompressedBinder z                      <name="Contents (Compressed)", bgcolor=cDkGreen>;
 }

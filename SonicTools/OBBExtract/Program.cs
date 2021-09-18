@@ -23,7 +23,7 @@ namespace OBBExtract
                 if (!flag)
                 {
                     Console.WriteLine("Usage: Drag an OBB file to extract its contents.");
-                    Console.WriteLine("Please note that this application does not yet support LPKv2 or any OBB from Episode 1\n");
+                    Console.WriteLine("Please note that this application does not yet support any OBB from Episode 1\n");
                     Console.WriteLine("Press enter to Exit.");
                     Console.ReadLine();
                 }

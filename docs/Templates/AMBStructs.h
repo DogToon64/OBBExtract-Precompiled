@@ -1,9 +1,10 @@
 //------------------------------------------------
 //  Header file for 010 Editor Binary Template
-//  Kass(RadiantDerg) 2021-07-27
+//  Author: Kass(RadiantDerg) 2021-09-18
 //  Dimps AmFS: Memory Binder (.AMB)
 //  /// Other license, not GPL 3.0! (Tentative) ///
 //------------------------------------------------
+#include "Common/Utility.h"
 
 typedef struct Header
 {
@@ -98,13 +99,6 @@ typedef struct FileIndexDataRev2 // v30
 
     g_filePointer = filePointer;
     g_fileSize = fileSize;
-};
-
-typedef struct FileData (uint dataLength)
-{
-    char fileDataStart                          <bgcolor=cYellow>;
-    char fileData[dataLength-2];
-    char fileDataEnd                            <bgcolor=cRed>;
 };
 
 typedef struct CompressedBinder

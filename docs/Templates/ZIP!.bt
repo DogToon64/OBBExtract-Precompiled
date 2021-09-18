@@ -1,0 +1,26 @@
+//------------------------------------------------
+//  010 Editor v11.0.1 Binary Template
+//  Author: Kass(RadiantDerg) 2021-09-18
+//  S4E2 Android Compressed File (header signature= ZIP!)
+//  Data is little endian
+//------------------------------------------------
+#include "Common/Utility.h"
+LittleEndian();
+
+
+///   File Start   ///
+
+local int64 fileLength                      <hidden=true> = FileSize();
+
+char signature[4]           <name="Signature", bgcolor=cWhite>;
+// Various other Dimps formats include version like this too..
+uint unknown                <name="File Version?", bgcolor=cWhite>;
+uint zero                   <name="Unknown UInt32", bgcolor=cWhite>;
+uint CompressedDataSize     <name="Compressed Data Size", bgcolor=cWhite>;
+uint unknown2               <name="Unknown UInt32", bgcolor=cWhite>;
+
+CompressedData a            <name="File Data (Compressed)", comment="zlib", bgcolor=cDkGreen>;
+
+
+// DDS Files with compression come out as KTX... use http://github.khronos.org/KTX-Specification/
+// And https://github.com/KhronosGroup/KTX-Software library to parse the Khronos Texture data.

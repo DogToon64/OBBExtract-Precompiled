@@ -17,9 +17,9 @@ namespace AMBExtract
 
             var header = MemoryBinder.ReadHeader(stream);
 
-            Logger.Print("AMB version:    " + header.version.ToString());
-            Logger.Print("Is big endian?: " + header.isBigEndian.ToString());
-            Console.WriteLine("Compression:    {0}\n", header.compressionType.ToString());
+            Logger.Print("AMB version:        " + header.version.ToString());
+            Logger.Print("Is big endian?:     " + header.isBigEndian.ToString());
+            Logger.Print("Compression type:   " + header.compressionType.ToString() + "\n");
 
             // Below is not legal code, just shittily brainstorming.
 

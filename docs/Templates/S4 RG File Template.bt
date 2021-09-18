@@ -1,0 +1,46 @@
+//------------------------------------------------
+//  010 Editor v11.0.1 Binary Template
+//  Author: Kass(RadiantDerg) 2021-05-12
+//  Sonic 4 Ring SET format (.RG)
+//  Data is little endian (big on console)
+//------------------------------------------------
+LittleEndian();
+
+ushort width                       <name="Map Width", bgcolor=cRed>;
+ushort height                      <name="Map Height", bgcolor=cGreen>;
+local int mapArea = width*height;
+
+typedef struct RingData
+{
+    local int i                    <hidden=true>;
+    local int j                    <hidden=true>;
+    local int64 lastpos = FTell();
+    
+    for(i = 0; i < mapArea; i++)
+    {
+        struct
+        {
+            uint pointer               <name="Pointer", bgcolor=cDkAqua>;
+            lastpos = FTell();
+            FSeek(pointer);
+            ushort ringnum             <name="Number of rings", fgcolor=0xA5A5A5>;
+
+            if (ringnum > 0)
+            {
+                for(j = 0; j < ringnum; j++)
+                {
+                    struct
+                    {
+                        ubyte pos_x         <name="Pos X", bgcolor=cYellow>;
+                        ubyte pos_y         <name="Pos Y", bgcolor=cYellow>;
+                    }Ring<name="Ring">;
+                }
+            }
+
+            FSeek(lastpos);
+
+        }Block<name="Block">;
+    }
+};
+
+RingData a                         <name="Ring Data", bgcolor=cDkYellow>;

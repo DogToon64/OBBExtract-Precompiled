@@ -19,11 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\S4T.ico" />
+    <None Remove="EmbeddedResource\S4T.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\S4T.ico" />
+    <Resource Include="EmbeddedResource\S4T.ico" />
   </ItemGroup>
 
 </Project>
