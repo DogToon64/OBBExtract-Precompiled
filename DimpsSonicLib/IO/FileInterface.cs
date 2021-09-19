@@ -4,6 +4,7 @@ using System.Text;
 
 namespace DimpsSonicLib.IO
 {
+    // Completely unused, but a list of supported files I suppose.
     class FileInterface
     {
         public enum FileType

@@ -20,10 +20,10 @@ namespace AMBExtract
                     Console.WriteLine("Command-line Usage: AMBExtract <AMB File> OR AMBExtract <Path>");
                 }
 
-                //Unpack AMB file(s)
+                // Unpack AMB file(s)
                 else if (File.Exists(args[0]))
                 {
-                    //change this later to process potential options like SkipIndexCreation, ChangeEndian, or UseCompression
+                    // Change this later to process potential options like SkipIndexCreation, ChangeEndian, or UseCompression
                     if (args.Length > 1)
                     {
                         foreach (string file in args)
@@ -34,7 +34,6 @@ namespace AMBExtract
                                 Logger.Print("Unpacking \"" + Path.GetFileName(file) + "\"");
                                 Functions.UnpackAMBFile(file);
                             }
-
                             else
                                 Logger.PrintWarning("A directory was detected, ignoring.\n");
                         }
@@ -46,25 +45,20 @@ namespace AMBExtract
                     }
                 }
 
-                //Pack AMB from Directory
+                // Pack AMB from Directory
                 else if (File.GetAttributes(args[0]).HasFlag(FileAttributes.Directory))
                 {
                     Logger.Print("Directory \"" + args[0] + "\" was passed in.");
                     Functions.PackAMBFile(args[0]);
                 }
-
                 else
                     Logger.PrintError("AMBExtract was unable to parse the given argument(s)");
 
             }
             catch (Exception ex)
             {
-                //Console.ForegroundColor = ConsoleColor.Red;
-                //Console.WriteLine("An error has occured:\n" + ex.Message);
-
                 Logger.PrintError("An error has occured:\n" + ex.Message.ToString());
             }
-            Console.ResetColor();
             Console.ReadLine();
         }
     }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DimpsSonicLib.Archives
+namespace DimpsSonicLib.Helpers
 {
-    public class AMBv1
+    public static class Utility
     {
+
+
 
     }
 }

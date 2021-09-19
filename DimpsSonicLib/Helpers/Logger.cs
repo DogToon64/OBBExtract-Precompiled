@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 
 namespace DimpsSonicLib
 {
-    public class Common
-    {
-
-    }
-
     /// <summary>
     /// <b> WORK IN PROGRESS, DO NOT USE!!! </b>
     /// </summary>
-    public class Logger
+    public static class Logger
     {
         public static void Print(string text, bool pad = false)
         {

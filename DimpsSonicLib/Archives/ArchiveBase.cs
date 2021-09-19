@@ -4,8 +4,10 @@ using System.Text;
 
 namespace DimpsSonicLib.Archives
 {
-    public class AMBv2
+    public class ArchiveBase
     {
+
+
 
     }
 }

@@ -7,6 +7,7 @@
 //  Adding support for the new versions shouldn't be too difficult, however.
 //  Data is little endian
 //------------------------------------------------
+#include "Common/Utility.h"
 LittleEndian();
 
 // = = = = = Globals = = = = =
@@ -64,13 +65,6 @@ typedef struct FileIndexData
     g_fileSize = fileSize;
     g_dirID    = dirID;
     g_nameID   = nameID;
-};
-
-typedef struct FileData (uint dataLength)
-{
-    char fileDataStart <bgcolor=cYellow, hidden=true>;
-    char fileData[dataLength-2] <hidden=true>;
-    char fileDataEnd <bgcolor=cRed, hidden=true>;
 };
 
 typedef struct UnknownData1 (uint chunkSize)
@@ -134,22 +128,3 @@ OBBData b                                       <name="Data">;
 FSeek(g_nameTblPtr);
 NameTData c(g_nameTblLen)                       <name="Name/Directory Table", fgcolor=0xA5A5A5, bgcolor=cDkYellow>;
 
-
-
-// === File layout Summary ===
-
-// Header, 32 bytes long consisting of signature"LPK", numFiles(2317),
-// numDir(119), and other pointers/offsets. Also 2 unknown shorts that = 1
-
-// Unknown data chunk with size of unkDataLen in bytes
-
-// File Pointers, each containing 16 bytes per file. uint ptr, uint size[2],
-// ushort dirID, ushort nameID
-
-// <File Data>
-
-// Name/Directory Table. nameID and dirID from fileIndex are offsets based at
-// nameTblPtr to a new offset (once again based at nameTblPtr) where it reads a
-// null-terminated string.
-
-// Unknown footer data

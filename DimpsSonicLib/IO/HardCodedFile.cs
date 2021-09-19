@@ -11,13 +11,13 @@ namespace DimpsSonicLib.IO
         public void CreateFileIndex()
         {
             //Generate <AMBName>_index.bin (Tentative name)
-            throw new NotImplementedException("CreateFileIndex NotImpl");
+            throw new NotImplementedException("CreateFileIndex Not Implemented");
         }
 
         public void ReadFileIndex()
         {
-            //Recall Hard Coded file index from <AMBName>_index.bin (Tentative name)
-            throw new NotImplementedException("ReadFileIndex NotImpl");
+            //Recall Hard-Coded file index from <AMBName>_index.bin (Tentative name)
+            throw new NotImplementedException("ReadFileIndex Not Implemented");
         }
     }
 }

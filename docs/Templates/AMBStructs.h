@@ -52,10 +52,10 @@ typedef struct SubHeaderRev1 // v28
 
 typedef struct SubHeaderRev2 // v30
 {
-    int64 fileCount                             <name="File Count">;
-    int64 listPointer                           <name="List Pointer">;
-    int64 dataPointer                           <name="Data Pointer">;
-    int64 nameTable                             <name="Name Table Pointer">; //Ignored by AMBs that have had their contents hard-coded
+    uint64 fileCount                             <name="File Count">;
+    uint64 listPointer                           <name="List Pointer">;
+    uint64 dataPointer                           <name="Data Pointer">;
+    uint64 nameTable                             <name="Name Table Pointer">; //Ignored by AMBs that have had their contents hard-coded
 
     g_fileCount = fileCount;
     g_listPointer = listPointer;

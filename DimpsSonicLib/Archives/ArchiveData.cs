@@ -4,8 +4,10 @@ using System.Text;
 
 namespace DimpsSonicLib.Archives
 {
-    class ArchiveData
+    public class ArchiveData
     {
+
+
 
     }
 }

@@ -7,6 +7,7 @@
 //  Adding support for the new versions shouldn't be too difficult, however.
 //  Data is little endian
 //------------------------------------------------
+#include "Common/Utility.h"
 LittleEndian();
 
 // = = = = = Globals = = = = =
@@ -61,13 +62,6 @@ typedef struct FileIndexData
     g_fileSize = fileSize;
     g_dirID    = dirID;
     g_nameID   = nameID;
-};
-
-typedef struct FileData (uint dataLength)
-{
-    char fileDataStart <bgcolor=cYellow, hidden=true>;
-    char fileData[dataLength-2] <hidden=true>;
-    char fileDataEnd <bgcolor=cRed, hidden=true>;
 };
 
 typedef struct UnknownData1 (uint chunkSize)
