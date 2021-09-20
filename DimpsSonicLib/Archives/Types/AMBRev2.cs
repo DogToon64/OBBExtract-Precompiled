@@ -5,21 +5,22 @@ using System.Text;
 
 namespace DimpsSonicLib.Archives
 {
-    public class AMBRev2SubHeader : AMBSubHeader
+    public class AMBSubHeader2
     {
-
+        public ulong fileCount;
+        public ulong listPointer;
+        public ulong dataPointer;
+        public ulong nameTable;
     }
 
-    public class AMBRev2Index : AMBFileIndex
+    public class AMBFileIndex2
     {
-
-    }
-
-    public class AMBRev2 : MemoryBinderReader
-    {
-        public AMBRev2(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { }
-        public AMBRev2(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
-
-
+        public uint  filePointer;
+        public uint  unknown1;
+        public uint  unknown2;
+        public uint  fileSize;
+        public uint  unknown3;
+        public short USR0;
+        public short USR1;
     }
 }

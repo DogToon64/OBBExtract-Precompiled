@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMBExtract", "SonicTools\AM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBBExtract", "SonicTools\OBBExtract\OBBExtract.csproj", "{AD1B21D5-766D-4B52-B645-51439A0F72F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeflateTest", "SonicTools\DeflateTest\DeflateTest.csproj", "{0118FF32-A316-4826-AF09-05D1779CC91B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,14 @@ Global
 		{AD1B21D5-766D-4B52-B645-51439A0F72F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD1B21D5-766D-4B52-B645-51439A0F72F1}.Release|x86.ActiveCfg = Release|Any CPU
 		{AD1B21D5-766D-4B52-B645-51439A0F72F1}.Release|x86.Build.0 = Release|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Debug|x86.Build.0 = Debug|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Release|x86.ActiveCfg = Release|Any CPU
+		{0118FF32-A316-4826-AF09-05D1779CC91B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +60,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CEA4D8FE-2C5C-4E4B-89FC-DDBF8D6497CF} = {AF698516-0558-4AEE-B039-B00DF28337C1}
 		{AD1B21D5-766D-4B52-B645-51439A0F72F1} = {AF698516-0558-4AEE-B039-B00DF28337C1}
+		{0118FF32-A316-4826-AF09-05D1779CC91B} = {AF698516-0558-4AEE-B039-B00DF28337C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B26C8708-D4AD-4A3E-83F2-FB9FA1412244}

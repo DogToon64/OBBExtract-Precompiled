@@ -21,7 +21,9 @@ namespace AMBExtract
                 var reader = new MemoryBinderReader(stream);
                 var header = reader.ReadHeader();
 
-                DevFunc(header);
+                
+
+                //DevFunc(header);
                 CheckAMB(header);
 
 
@@ -94,9 +96,9 @@ namespace AMBExtract
         {
         #if DEBUG
             Logger.PrintInfo("[DEBUG]");
-            MemoryBinder.Version uwu = MemoryBinder.GetAMBVersion(header);
+            MemoryBinder.Version ver = MemoryBinder.GetAMBVersion(header);
 
-            switch (uwu)
+            switch (ver)
             {
                 case MemoryBinder.Version.Rev0:
                     Logger.PrintWarning("AMB version:        Base Version");

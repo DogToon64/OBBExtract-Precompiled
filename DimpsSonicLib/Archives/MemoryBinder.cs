@@ -2,31 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using DimpsSonicLib.IO;
 
 namespace DimpsSonicLib.Archives
 {
-    #region AMB Base Classes
-    public class AMBSubHeader
+    public class MemoryBinder : MemoryBinderReader
     {
-        public uint fileCount;
-        public uint listPointer;
-        public uint dataPointer;
-        public uint nameTable;
-    }
-    public class AMBFileIndex
-    {
-        public uint filePointer;
-        public uint fileSize;
-        public uint unkEditorVar5;
-        public short USR0;
-        public short USR1;
-    }
-    #endregion
+        public MemoryBinder(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { }
+        public MemoryBinder(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
 
-    public class MemoryBinder
-    {
         public enum Version
         {
             //Common, Type 1, Type 2
@@ -45,27 +29,26 @@ namespace DimpsSonicLib.Archives
                 return Version.Unknown;
         }
 
-        public static void DevFunc(Stream stream)
+        public static void TestingOnlyMethod(Stream stream)
         {
             var reader = new MemoryBinderReader(stream);
             var header = reader.ReadHeader();
 
+            // Do you like how I flip-flop between Switch Statements and "Yandev" Statements? Xd
             switch (GetAMBVersion(header))
             {
                 case Version.Rev0:
-                    Logger.PrintError("Cast to AMBRev0");
+                    // somethin
                     break;
                 case Version.Rev1:
-                    Logger.PrintError("Cast to AMBRev1");
+                    // somethin
                     break;
                 case Version.Rev2:
-                    Logger.PrintError("Cast to AMBRev2");
+                    // somethin
                     break;
                 case Version.Unknown:
                     throw new NotImplementedException("Unknown AMB Version");
             }
-
-            // Brain has stopped working. 
 
         }
 
@@ -76,9 +59,7 @@ namespace DimpsSonicLib.Archives
         public MemoryBinderReader(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { }
         public MemoryBinderReader(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
 
-
         // Methods
-
         public AMBHeader ReadHeader()
         {
             AMBHeader header = new AMBHeader { };
@@ -128,7 +109,5 @@ namespace DimpsSonicLib.Archives
         // Methods
 
 
-
     }
-
 }
