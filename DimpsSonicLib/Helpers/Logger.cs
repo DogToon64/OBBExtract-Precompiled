@@ -11,10 +11,10 @@ namespace DimpsSonicLib
     /// </summary>
     public static class Logger
     {
-        public static void Print(string text, bool pad = false)
+        public static void Print(string text, bool overwrite = false)
         {
-            if (pad)
-                Console.WriteLine(text + "\n");
+            if (overwrite)
+                Console.Write(text + "\r");
             else
                 Console.WriteLine(text);
         }

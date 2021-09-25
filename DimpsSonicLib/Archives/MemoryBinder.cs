@@ -6,11 +6,17 @@ using DimpsSonicLib.IO;
 
 namespace DimpsSonicLib.Archives
 {
-    public class MemoryBinder : MemoryBinderReader
+    public class AMB
     {
-        public MemoryBinder(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { }
-        public MemoryBinder(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
+        // The type returned from ReadAMB().. the problem is identifying the object types after getting everything.
+        public object Header { get; set; }
+        public object SubHeader { get; set; }
+        public object FileIndex { get; set; }
+        public MemoryBinder.Version Version { get; set; }
+    }
 
+    public class MemoryBinder
+    {
         public enum Version
         {
             //Common, Type 1, Type 2
@@ -29,27 +35,29 @@ namespace DimpsSonicLib.Archives
                 return Version.Unknown;
         }
 
-        public static void TestingOnlyMethod(Stream stream)
+        public static AMB ReadAMB(Stream stream)
         {
             var reader = new MemoryBinderReader(stream);
             var header = reader.ReadHeader();
+            reader.JumpTo(16);
+            var ver = GetAMBVersion(header);
 
-            // Do you like how I flip-flop between Switch Statements and "Yandev" Statements? Xd
-            switch (GetAMBVersion(header))
+            if (ver != Version.Unknown)
             {
-                case Version.Rev0:
-                    // somethin
-                    break;
-                case Version.Rev1:
-                    // somethin
-                    break;
-                case Version.Rev2:
-                    // somethin
-                    break;
-                case Version.Unknown:
-                    throw new NotImplementedException("Unknown AMB Version");
-            }
+                var subHeader = reader.ReadSubHeader(ver);
+                if (header.compressionType != 0)
+                    throw new Exception("Compressed binders are currently not supported");
 
+                var fileIndex = reader.ReadFileIndex(subHeader, ver);
+
+                return new AMB { Header = header, SubHeader = subHeader, FileIndex = fileIndex, Version = ver };
+            }
+            else throw new NotImplementedException("Unknown AMB Version");
+        }
+
+        public static void WriteBinder()
+        {
+            throw new NotImplementedException("Writing of Memory Binders has not yet been implemented!");
         }
 
     }
@@ -60,6 +68,10 @@ namespace DimpsSonicLib.Archives
         public MemoryBinderReader(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
 
         // Methods
+        /// <summary>
+        /// Parses the header of the a loaded AMB file
+        /// </summary>
+        /// <returns>Returns a new AMBHeader type</returns>
         public AMBHeader ReadHeader()
         {
             AMBHeader header = new AMBHeader { };
@@ -68,9 +80,8 @@ namespace DimpsSonicLib.Archives
 
             if (sig != AMBHeader.signature)
             {
-                throw new Exception("Signature of input does not match");
+                throw new Exception("Signature of input does not match.");
             }
-
 
             JumpAhead(8);
             header.isBigEndian = ReadByte() == 1 ? true : false;
@@ -89,14 +100,126 @@ namespace DimpsSonicLib.Archives
             return header;
         }
 
-        public virtual AMBSubHeader ReadSubHeader()
+        /// <summary>
+        /// Parses the sub-header of a loaded AMB file
+        /// </summary>
+        /// <param name="version">The version of the curently loaded AMB file, used to determine the correct reading method</param>
+        /// <returns>Returns a new AMBSubHeader type</returns>
+        public object ReadSubHeader(MemoryBinder.Version version)
         {
-            throw new NotImplementedException("MemoryBinder.cs does not implement this function. Please call it from a derived class instead");
+            if (version == MemoryBinder.Version.Rev0)
+            {
+                AMBSubHeader subHeader = new AMBSubHeader { };
+
+                subHeader.fileCount   = ReadUInt32();
+                subHeader.listPointer = ReadUInt32();
+                subHeader.dataPointer = ReadUInt32();
+                subHeader.nameTable   = ReadUInt32();
+
+                return subHeader;
+            }
+            else if (version == MemoryBinder.Version.Rev1)
+            {
+                AMBSubHeader1 subHeader = new AMBSubHeader1 { };
+
+                subHeader.fileCount   = ReadUInt32();
+                subHeader.listPointer = ReadUInt32();
+                subHeader.unknown1    = ReadUInt32();
+                subHeader.dataPointer = ReadUInt32();
+                subHeader.nameTable   = ReadUInt32();
+                subHeader.unknown2    = ReadUInt32();
+
+                return subHeader;
+            }
+            else if (version == MemoryBinder.Version.Rev2)
+            {
+                AMBSubHeader2 subHeader = new AMBSubHeader2 { };
+
+                subHeader.fileCount   = ReadUInt64();
+                subHeader.listPointer = ReadUInt64();
+                subHeader.dataPointer = ReadUInt64();
+                subHeader.nameTable   = ReadUInt64();
+
+                return subHeader;
+            }
+            else throw new NotImplementedException("Unknown AMB Version");
         }
 
-        public virtual List<AMBFileIndex> ReadFileIndex(uint fileIndexPointer)
+        /// <summary>
+        /// Parses the file index of a loaded AMB file
+        /// </summary>
+        /// <param name="subHeader">The sub-header of the currently loaded AMB file, used to parse binder contents</param>
+        /// <param name="version">The version of the curently loaded AMB file, used to determine the correct reading method</param>
+        /// <returns></returns>
+        public object ReadFileIndex(object subHeader, MemoryBinder.Version version)
         {
-            throw new NotImplementedException("MemoryBinder.cs does not implement this function. Please call it from a derived class instead");
+            if (version == MemoryBinder.Version.Rev0)
+            {
+                List<AMBFileIndex> fileIndexList = new List<AMBFileIndex>();
+                AMBSubHeader sub = (AMBSubHeader)subHeader;
+
+                JumpTo(sub.listPointer);
+
+                for (int i = 0; i < (int)sub.fileCount; i++)
+                {
+                    fileIndexList.Add(new AMBFileIndex()
+                    {
+                        filePointer = ReadUInt32(),
+                        unknown1    = ReadUInt32(),
+                        fileSize    = ReadUInt32(),
+                        USR0        = ReadUInt16(),
+                        USR1        = ReadUInt16(),
+                    });
+                }
+
+                return fileIndexList;
+            }
+            else if (version == MemoryBinder.Version.Rev1)
+            {
+                List<AMBFileIndex1> fileIndexList = new List<AMBFileIndex1>();
+                AMBSubHeader1 sub = (AMBSubHeader1)subHeader;
+
+                JumpTo(sub.listPointer);
+
+                for (int i = 0; i < (int)sub.fileCount; i++)
+                {
+                    fileIndexList.Add(new AMBFileIndex1()
+                    {
+                        filePointer = ReadUInt32(),
+                        unknown1    = ReadUInt32(),
+                        fileSize    = ReadUInt32(),
+                        unknown2    = ReadUInt32(),
+                        USR0        = ReadUInt16(),
+                        USR1        = ReadUInt16(),
+                    });
+                }
+
+                return fileIndexList;
+            }
+            else if (version == MemoryBinder.Version.Rev2)
+            {
+                List<AMBFileIndex2> fileIndexList = new List<AMBFileIndex2>();
+                AMBSubHeader2 sub = (AMBSubHeader2)subHeader;
+
+                JumpTo((long)sub.listPointer);
+
+                for (int i = 0; i < (int)sub.fileCount; i++)
+                {
+                    fileIndexList.Add(new AMBFileIndex2()
+                    {
+                        filePointer = ReadUInt32(),
+                        unknown1    = ReadUInt32(),
+                        unknown2    = ReadUInt32(),
+                        fileSize    = ReadUInt32(),
+                        unknown3    = ReadUInt32(),
+                        USR0        = ReadUInt16(),
+                        USR1        = ReadUInt16(),
+                    });
+                }
+
+                return fileIndexList;
+            }
+            else throw new NotImplementedException("Unknown AMB Version");
         }
 
     }

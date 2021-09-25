@@ -31,8 +31,9 @@ namespace AMBExtract
 
                             if (!File.GetAttributes(file).HasFlag(FileAttributes.Directory))
                             {
-                                Logger.Print("Unpacking \"" + Path.GetFileName(file) + "\"");
+                                Logger.Print("Unpacking \"" + Path.GetFileName(file) + "\"\n");
                                 Functions.UnpackAMBFile(file);
+                                Console.WriteLine("\n");
                             }
                             else
                                 Logger.PrintWarning("A directory was detected, ignoring.\n");
@@ -42,6 +43,7 @@ namespace AMBExtract
                     {
                         Logger.Print("Unpacking \"" + Path.GetFileName(args[0]) + "\"");
                         Functions.UnpackAMBFile(args[0]);
+                        Console.WriteLine();
                     }
                 }
 
@@ -57,7 +59,7 @@ namespace AMBExtract
             }
             catch (Exception ex)
             {
-                Logger.PrintError("An error has occured:\n" + ex.Message.ToString());
+                Logger.PrintError("An error has occured:\n" + ex.ToString());
             }
             Console.ReadLine();
         }

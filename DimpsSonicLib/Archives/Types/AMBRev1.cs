@@ -21,7 +21,7 @@ namespace DimpsSonicLib.Archives
         public uint  unknown1;
         public uint  fileSize;
         public uint  unknown2;
-        public short USR0;
-        public short USR1;
+        public ushort USR0;
+        public ushort USR1;
     }
 }

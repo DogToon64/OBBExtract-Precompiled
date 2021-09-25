@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DimpsSonicLib;
+using DimpsSonicLib.IO;
 using DimpsSonicLib.Archives;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,12 @@ namespace AMBExtract
         {
             try
             {
-                // Testing stuff       
-                Stream stream = File.OpenRead(args);
-                var reader = new MemoryBinderReader(stream);
+                // Testing stuff 
+
+                Stream stream2 = File.OpenRead(args);
+                var reader = new MemoryBinderReader(stream2);
                 var header = reader.ReadHeader();
-
-                
-
-                //DevFunc(header);
                 CheckAMB(header);
-
 
                 // = = = = = = =
 
@@ -34,9 +31,43 @@ namespace AMBExtract
 
 
                 // Load file from stream
+                Stream stream = File.OpenRead(args);
+                var amb = MemoryBinder.ReadAMB(stream);
+                AMBHeader amH = (AMBHeader)amb.Header;
 
 
                 // Create index.bin based on current loaded file
+                if (amb.Version == MemoryBinder.Version.Rev0)
+                {
+                    AMBSubHeader amSH = (AMBSubHeader)amb.SubHeader;
+                    List<AMBFileIndex> amFI = (List<AMBFileIndex>)amb.FileIndex;
+
+                    ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
+                    a.JumpTo(amSH.nameTable);
+
+
+                }
+                else if (amb.Version == MemoryBinder.Version.Rev1)
+                {
+                    AMBSubHeader1 amSH1 = (AMBSubHeader1)amb.SubHeader;
+                    List<AMBFileIndex1> amFI1 = (List<AMBFileIndex1>)amb.FileIndex;
+
+                    ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
+                    a.JumpTo(amSH1.nameTable);
+
+
+                }
+                else if (amb.Version == MemoryBinder.Version.Rev2)
+                {
+                    AMBSubHeader2 amSH2 = (AMBSubHeader2)amb.SubHeader;
+                    List<AMBFileIndex2> amFI2 = (List<AMBFileIndex2>)amb.FileIndex;
+
+                    ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
+                    a.JumpTo((long)amSH2.nameTable);
+
+
+                }
+                else throw new Exception("Something happened.");
 
 
                 // Extract data
@@ -68,28 +99,6 @@ namespace AMBExtract
             {
                 Logger.PrintError(ex.Message.ToString());
             }
-        }
-
-        public static void DevFunc(AMBHeader header)
-        {
-
-            switch (MemoryBinder.GetAMBVersion(header))
-            {
-                case MemoryBinder.Version.Rev0:
-                    Logger.PrintError("Cast to AMBRev0");
-                    break;
-                case MemoryBinder.Version.Rev1:
-                    Logger.PrintError("Cast to AMBRev1");
-                    break;
-                case MemoryBinder.Version.Rev2:
-                    Logger.PrintError("Cast to AMBRev2");
-                    break;
-                case MemoryBinder.Version.Unknown:
-                    throw new NotImplementedException("Unknown AMB Version");
-            }
-
-            // Brain has stopped working. 
-
         }
 
         public static void CheckAMB(AMBHeader header)
