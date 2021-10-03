@@ -356,6 +356,72 @@ namespace DimpsSonicLib.IO
         }
 
         // 12-Byte Types
+        public virtual unsafe VECTOR3 ReadVector3()
+        {
+            var vec = new VECTOR3();
+            uint v = ReadUInt32();
+            vec.X = *((float*)&v);
+
+            v = ReadUInt32();
+            vec.Y = *((float*)&v);
+
+            v = ReadUInt32();
+            vec.Z = *((float*)&v);
+
+            return vec;
+        }
+
+        public virtual unsafe RGB ReadRGB()
+        {
+            var color = new RGB();
+            uint value = ReadUInt32();
+            color.Red = *((float*)&value);
+
+            value = ReadUInt32();
+            color.Green = *((float*)&value);
+
+            value = ReadUInt32();
+            color.Blue = *((float*)&value);
+
+            return color;
+        }
+
+        // 16-Byte Types
+        public virtual unsafe VECTOR4 ReadVector4()
+        {
+            var vec = new VECTOR4();
+            uint v = ReadUInt32();
+            vec.X = *((float*)&v);
+
+            v = ReadUInt32();
+            vec.Y = *((float*)&v);
+
+            v = ReadUInt32();
+            vec.Z = *((float*)&v);
+
+            v = ReadUInt32();
+            vec.W = *((float*)&v);
+            return vec;
+        }
+
+        public virtual unsafe RGBA ReadRGBA()
+        {
+            var color = new RGBA();
+            uint value = ReadUInt32();
+            color.Red = *((float*)&value);
+
+            value = ReadUInt32();
+            color.Green = *((float*)&value);
+
+            value = ReadUInt32();
+            color.Blue = *((float*)&value);
+
+            value = ReadUInt32();
+            color.Alpha = *((float*)&value);
+
+            return color;
+        }
+
 
         // TODO: Write override methods for decimals
 

@@ -3,56 +3,36 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using ICSharpCode.SharpZipLib.Core;
 
-namespace DeflateTest
+namespace CmdTest
 {
-    class Program
+    public class zlibTest
     {
-        static void Main(string[] args)
+        public static void zlibFunc(string[] args)
         {
-            if (args.Length == 0)
+
+            var newDir = ProgramCommon.CreateDirectoryAtFileLocation(ProgramCommon.GetLocalFile("SON_MDL.AMB"), "Compressed");
+
+            foreach (string file in args)
             {
-                Console.WriteLine("No files passed.");
+                // Compress files
+                Compress(file, newDir);
             }
-            else
-            {
-                try
-                {
-                    string dir = (Path.GetFullPath(args[0]).Replace(Path.GetFileName(args[0]), ""));
-                    Directory.CreateDirectory(dir + "Compressed");
-                    var newDir = (dir + "Compressed");
 
-                    foreach (string file in args)
-                    {
-                        // Compress files
-                        Compress(file, newDir);
-                    }
+            // Now decompress those exact same files
+            Decompress(newDir);
 
-                    // Now decompress those exact same files
-                    Decompress(newDir);
-
-                    Console.WriteLine("done");
-                }
-                catch (Exception ex) { Console.WriteLine(ex.Message); }
-
-                Console.ReadLine();
-            }
         }
-
-
 
         public static void Compress(string file, string newDir)
         {
-            if (true)
-            {
-                
-                Console.WriteLine("Compressed {0} from {1} down to {2} bytes.", Path.GetFileName(file));
-            }
+            Console.WriteLine("string file: {0}\nstring newDir: {1}", file, newDir);
+            Console.WriteLine("Compressed {0} from {1} bytes down to {2} bytes.\n", file, 0 , -69);
         }
 
         public static void Decompress(string dir)
         {
 
-            Console.WriteLine("Decompressed {0}");
+            Console.WriteLine("Decompressed {0}", "Fuck All");
             //using (FileStream originalFileStream = input.OpenRead())
             //{ 
             //    using (var memoryStream = new MemoryStream())

@@ -20,9 +20,7 @@ namespace AMBExtract
                 // Testing stuff 
 
                 Stream stream2 = File.OpenRead(args);
-                var reader = new MemoryBinderReader(stream2);
-                var header = reader.ReadHeader();
-                CheckAMB(header);
+                CheckAMB(stream2);
 
                 // = = = = = = =
 
@@ -43,7 +41,6 @@ namespace AMBExtract
                     List<AMBFileIndex> amFI = (List<AMBFileIndex>)amb.FileIndex;
 
                     ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
-                    a.JumpTo(amSH.nameTable);
 
 
                 }
@@ -53,7 +50,6 @@ namespace AMBExtract
                     List<AMBFileIndex1> amFI1 = (List<AMBFileIndex1>)amb.FileIndex;
 
                     ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
-                    a.JumpTo(amSH1.nameTable);
 
 
                 }
@@ -63,7 +59,6 @@ namespace AMBExtract
                     List<AMBFileIndex2> amFI2 = (List<AMBFileIndex2>)amb.FileIndex;
 
                     ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
-                    a.JumpTo((long)amSH2.nameTable);
 
 
                 }
@@ -101,11 +96,15 @@ namespace AMBExtract
             }
         }
 
-        public static void CheckAMB(AMBHeader header)
+        public static void CheckAMB(Stream stream)
         {
         #if DEBUG
+            var reader = new MemoryBinderReader(stream);
+            var header = reader.ReadHeader();
+            
             Logger.PrintInfo("[DEBUG]");
             MemoryBinder.Version ver = MemoryBinder.GetAMBVersion(header);
+            var sheader = reader.ReadSubHeader(ver);
 
             switch (ver)
             {
@@ -124,7 +123,8 @@ namespace AMBExtract
             }
 
             Logger.PrintWarning("Is big endian?:     " + header.isBigEndian.ToString());
-            Logger.PrintWarning("Compression type:   " + header.compressionType.ToString() + "\n");
+            Logger.PrintWarning("Compression type:   " + header.compressionType.ToString());
+            Logger.PrintInfo   ("Files in AMB:       " + "\n");  // Add after implementing covariance/contravariance
         #endif
         }
     }

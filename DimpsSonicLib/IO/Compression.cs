@@ -8,11 +8,12 @@ namespace DimpsSonicLib.IO
 {
     public class Compression
     {
+        #region zlib
         public static Stream CompressStream(Stream input, int type)
         {
             // ...
 
-            throw new NotImplementedException();
+            throw new NotImplementedException("zlib not implemented!");
             // return packedStream;
         }
 
@@ -20,8 +21,27 @@ namespace DimpsSonicLib.IO
         {
             // ...
 
-            throw new NotImplementedException();
+            throw new NotImplementedException("zlib not implemented!");
             // return unpackedStream; 
         }
+        #endregion
+
+        #region Dimps RLE 
+        public static Stream NitroRLEncode(Stream input)
+        {
+            // ...
+
+            throw new NotImplementedException("Run-length encoding not implemented!");
+            // return encodedStream;
+        }
+
+        public static Stream NitroRLDecode(Stream input)
+        {
+            // ...
+
+            throw new NotImplementedException("Run-length decoding not implemented!");
+            // return decodedStream; 
+        }
+        #endregion
     }
 }

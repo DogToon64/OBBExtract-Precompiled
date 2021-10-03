@@ -26,4 +26,8 @@
     <Resource Include="EmbeddedResource\S4T.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Formats\" />
+  </ItemGroup>
+
 </Project>

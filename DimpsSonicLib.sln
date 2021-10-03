@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMBExtract", "SonicTools\AM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBBExtract", "SonicTools\OBBExtract\OBBExtract.csproj", "{AD1B21D5-766D-4B52-B645-51439A0F72F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeflateTest", "SonicTools\DeflateTest\DeflateTest.csproj", "{0118FF32-A316-4826-AF09-05D1779CC91B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmdTest", "SonicTools\CmdTest\CmdTest.csproj", "{0118FF32-A316-4826-AF09-05D1779CC91B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
