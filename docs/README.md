@@ -7,10 +7,10 @@
 ## Sonic Tools
   A collection of various small (usually command-line) tools utilizing DimpsSonicLib out of the box. Compiled versions of these tools can be found on the [Releases page](https://github.com/RadiantDerg/DimpsSonicLib/releases)
  
-##### **AMBExtract**:
+### **AMBExtract**:
   Unpack/repack AMB files with this tool. Supports ***most*** AMB files, with the exception of AMBs in the Windows Phone port of Sonic The Hedgehog 4 Episode I
  
-##### **OBBExtract**:
+### **OBBExtract**:
   Unpack Android APK Expansion (.obb) files with this tool. Supports OBB files from both paid and ad-supported versions of Sonic The Hedgehog 4 Episode II
   
   Episode I OBBs are currently unsupported due to the game using a proprietary closed-source file compression solution from Marmalade Game Studio
