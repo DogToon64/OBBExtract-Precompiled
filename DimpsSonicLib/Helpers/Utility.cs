@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DimpsSonicLib.Helpers
+namespace DimpsSonicLib
 {
     public static class Utility
     {

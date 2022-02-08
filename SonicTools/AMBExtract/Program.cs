@@ -31,17 +31,17 @@ namespace AMBExtract
 
                             if (!File.GetAttributes(file).HasFlag(FileAttributes.Directory))
                             {
-                                Logger.Print("Unpacking \"" + Path.GetFileName(file) + "\"\n");
+                                Log.Print("Unpacking \"" + Path.GetFileName(file) + "\"\n");
                                 Functions.UnpackAMBFile(file);
                                 Console.WriteLine("\n");
                             }
                             else
-                                Logger.PrintWarning("A directory was detected, ignoring.\n");
+                                Log.PrintWarning("A directory was detected, ignoring.\n");
                         }
                     }
                     else
                     {
-                        Logger.Print("Unpacking \"" + Path.GetFileName(args[0]) + "\"");
+                        Log.Print("Unpacking \"" + Path.GetFileName(args[0]) + "\"");
                         Functions.UnpackAMBFile(args[0]);
                         Console.WriteLine();
                     }
@@ -50,16 +50,16 @@ namespace AMBExtract
                 // Pack AMB from Directory
                 else if (File.GetAttributes(args[0]).HasFlag(FileAttributes.Directory))
                 {
-                    Logger.Print("Directory \"" + args[0] + "\" was passed in.");
+                    Log.Print("Directory \"" + args[0] + "\" was passed in.");
                     Functions.PackAMBFile(args[0]);
                 }
                 else
-                    Logger.PrintError("AMBExtract was unable to parse the given argument(s)");
+                    Log.PrintError("AMBExtract was unable to parse the given argument(s)");
 
             }
             catch (Exception ex)
             {
-                Logger.PrintError("An error has occured:\n" + ex.ToString());
+                Log.PrintError("An error has occured:\n" + ex.ToString());
             }
             Console.ReadLine();
         }

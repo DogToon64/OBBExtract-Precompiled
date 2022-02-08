@@ -6,24 +6,39 @@
 //------------------------------------------------
 // #include "Utility.h"
 
-typedef struct VECTOR3
+// Generic 
+typedef struct VECTOR2
 {
-    float X                  <name="X">;
-    float Y                  <name="Y">;
-    float Z                  <name="Z">;
+    float X                 <name="X">;
+    float Y                 <name="Y">;
 };
 
-typedef struct RGBA
+typedef struct VECTOR3
 {
-    float Red                <name="Red", bgcolor=cLtRed>;
-    float Green              <name="Green", bgcolor=cLtGreen>;
-    float Blue               <name="Blue", bgcolor=cLtBlue>;
-    float Alpha              <name="Alpha", bgcolor=cWhite>;
+    float X                 <name="X">;
+    float Y                 <name="Y">;
+    float Z                 <name="Z">;
+};
+
+typedef struct VECTOR4
+{
+    float X                 <name="X">;
+    float Y                 <name="Y">;
+    float Z                 <name="Z">;
+    float W                 <name="W">;
 };
 
 typedef struct RGB
 {
-    float Red                <name="Red", bgcolor=cLtRed>;
-    float Green              <name="Green", bgcolor=cLtGreen>;
-    float Blue               <name="Blue", bgcolor=cLtBlue>;
+    float Red               <name="Red", bgcolor=cLtRed>;
+    float Green             <name="Green", bgcolor=cLtGreen>;
+    float Blue              <name="Blue", bgcolor=cLtBlue>;
+};
+
+typedef struct RGBA
+{
+    float Red               <name="Red", bgcolor=cLtRed>;
+    float Green             <name="Green", bgcolor=cLtGreen>;
+    float Blue              <name="Blue", bgcolor=cLtBlue>;
+    float Alpha             <name="Alpha", bgcolor=cWhite>;
 };

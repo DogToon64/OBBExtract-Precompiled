@@ -19,7 +19,7 @@ namespace CmdTest
 
             for (int i = 1; i <= 8; i++)
             {
-                Logger.PrintInfo ($"Light Num  : {i}");
+                Log.PrintInfo ($"Light Num  : {i}");
                 Console.WriteLine($"Unknown    : {reader.ReadUInt32()}");
                 reader.JumpAhead(4);
                 Console.WriteLine($"Color      : RGBA{reader.ReadRGBA()}");

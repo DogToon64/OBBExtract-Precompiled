@@ -13,56 +13,27 @@ namespace AMBExtract
 {
     class Functions
     {
-        public static void UnpackAMBFile(string args)
+        public static void UnpackAMBFile(string arg)
         {
             try
             {
-                // Testing stuff 
-
-                Stream stream2 = File.OpenRead(args);
-                CheckAMB(stream2);
-
-                // = = = = = = =
-
-
                 // Create extraction folder named after current file
 
 
-                // Load file from stream
-                Stream stream = File.OpenRead(args);
-                var amb = MemoryBinder.ReadAMB(stream);
-                AMBHeader amH = (AMBHeader)amb.Header;
+                // Load AMB file from argument
+                Stream stream = File.OpenRead(arg);
+                AMB amb = Binder.ReadAMB(stream);
+
+                
 
 
-                // Create index.bin based on current loaded file
-                if (amb.Version == MemoryBinder.Version.Rev0)
-                {
-                    AMBSubHeader amSH = (AMBSubHeader)amb.SubHeader;
-                    List<AMBFileIndex> amFI = (List<AMBFileIndex>)amb.FileIndex;
 
-                    ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
+                //Binder.WriteAMB(amb);
 
 
-                }
-                else if (amb.Version == MemoryBinder.Version.Rev1)
-                {
-                    AMBSubHeader1 amSH1 = (AMBSubHeader1)amb.SubHeader;
-                    List<AMBFileIndex1> amFI1 = (List<AMBFileIndex1>)amb.FileIndex;
 
-                    ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
+                // Create index based on current file
 
-
-                }
-                else if (amb.Version == MemoryBinder.Version.Rev2)
-                {
-                    AMBSubHeader2 amSH2 = (AMBSubHeader2)amb.SubHeader;
-                    List<AMBFileIndex2> amFI2 = (List<AMBFileIndex2>)amb.FileIndex;
-
-                    ExtendedBinaryReader a = new ExtendedBinaryReader(stream);
-
-
-                }
-                else throw new Exception("Something happened.");
 
 
                 // Extract data
@@ -72,7 +43,7 @@ namespace AMBExtract
             }
             catch (Exception ex)
             {
-                Logger.PrintError(ex.Message.ToString());
+                Log.PrintError(ex.ToString());
             }
         }
 
@@ -80,10 +51,11 @@ namespace AMBExtract
         {
             try
             {
-                Logger.PrintError("PackAMBFile Not Implemented\n");
+                Log.PrintError("PackAMBFile Not Implemented\n");
 
                 // Try get either index binary or read from original.
 
+                // If above fails, generate a brand new file after user prompt (can be silenced)
 
                 // Pack data from current list 
 
@@ -92,40 +64,45 @@ namespace AMBExtract
             }
             catch (Exception ex)
             {
-                Logger.PrintError(ex.Message.ToString());
+                Log.PrintError(ex.Message.ToString());
             }
         }
 
-        public static void CheckAMB(Stream stream)
+        public static void ChangeEndian()
         {
-        #if DEBUG
-            var reader = new MemoryBinderReader(stream);
-            var header = reader.ReadHeader();
             
-            Logger.PrintInfo("[DEBUG]");
-            MemoryBinder.Version ver = MemoryBinder.GetAMBVersion(header);
-            var sheader = reader.ReadSubHeader(ver);
-
-            switch (ver)
-            {
-                case MemoryBinder.Version.Rev0:
-                    Logger.PrintWarning("AMB version:        Base Version");
-                    break;
-                case MemoryBinder.Version.Rev1:
-                    Logger.PrintWarning("AMB version:        Revision 1");
-                    break;
-                case MemoryBinder.Version.Rev2:
-                    Logger.PrintWarning("AMB version:        Revision 2");
-                    break;
-                case MemoryBinder.Version.Unknown:
-                    Logger.PrintWarning("AMB version:        Unknown Type");
-                    break;
-            }
-
-            Logger.PrintWarning("Is big endian?:     " + header.isBigEndian.ToString());
-            Logger.PrintWarning("Compression type:   " + header.compressionType.ToString());
-            Logger.PrintInfo   ("Files in AMB:       " + "\n");  // Add after implementing covariance/contravariance
-        #endif
         }
+
+        //public static void CheckAMB(Stream stream)
+        //{
+        //#if DEBUG
+        //    var reader = new MemoryBinderReader(stream);
+        //    var header = reader.ReadHeader();
+            
+        //    Logger.PrintInfo("[DEBUG]");
+        //    MemoryBinder.Version ver = MemoryBinder.GetAMBVersion(header);
+        //    var sheader = reader.ReadSubHeader(ver);
+
+        //    switch (ver)
+        //    {
+        //        case MemoryBinder.Version.Rev0:
+        //            Logger.PrintWarning("AMB version:        Base Version");
+        //            break;
+        //        case MemoryBinder.Version.Rev1:
+        //            Logger.PrintWarning("AMB version:        Revision 1");
+        //            break;
+        //        case MemoryBinder.Version.Rev2:
+        //            Logger.PrintWarning("AMB version:        Revision 2");
+        //            break;
+        //        case MemoryBinder.Version.Unknown:
+        //            Logger.PrintWarning("AMB version:        Unknown Type");
+        //            break;
+        //    }
+
+        //    Logger.PrintWarning("Is big endian?:     " + header.isBigEndian.ToString());
+        //    Logger.PrintWarning("Compression type:   " + header.compressionType.ToString());
+        //    Logger.PrintInfo   ("Files in AMB:       " + "\n");  // Add after implementing covariance/contravariance
+        //#endif
+        //}
     }
 }

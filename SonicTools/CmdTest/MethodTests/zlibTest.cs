@@ -1,4 +1,5 @@
 ﻿using System;
+using DimpsSonicLib.IO;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using ICSharpCode.SharpZipLib.Core;
@@ -10,7 +11,7 @@ namespace CmdTest
         public static void zlibFunc(string[] args)
         {
 
-            var newDir = ProgramCommon.CreateDirectoryAtFileLocation(ProgramCommon.GetLocalFile("SON_MDL.AMB"), "Compressed");
+            var newDir = FileInterface.CreateDirectoryAtFileLocation(FileInterface.GetLocalFile("SON_MDL.AMB"), "Compressed");
 
             foreach (string file in args)
             {

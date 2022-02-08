@@ -93,6 +93,7 @@ namespace DimpsSonicLib.IO
             JumpAhead(jumpAmount);
         }
 
+
         public string GetString(bool isAbsolute = false, bool isNullTerminated = true)
         {
             uint offset = (isAbsolute) ? ReadUInt32() : ReadUInt32() + Offset;
@@ -154,6 +155,20 @@ namespace DimpsSonicLib.IO
             }
             while (fs.Position < len);
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Read null-terminated String Array
+        /// </summary>
+        /// <param name="size">Size of expected string array to read</param>
+        /// <returns></returns>
+        public string[] ReadNullTerminatedStringArray(int size)
+        {
+            string[] stringArray = new string[size];
+
+            for (int i = 0; i < size; i++)
+                stringArray[i] = ReadNullTerminatedString();
+            return stringArray;
         }
 
         public T ReadByType<T>()
@@ -598,6 +613,16 @@ namespace DimpsSonicLib.IO
             OutStream.Write(dataBuffer, 0, sizeof(ushort));
         }
 
+        /// <summary>
+        /// Writes an array of null terminated strings to stream
+        /// </summary>
+        /// <param name="stringArray">Input string array to write</param>
+        public void WriteNullTerminatedStringArray(string[] stringArray)
+        {
+            foreach (string s in stringArray)
+                WriteNullTerminatedString(s);
+        }
+
         public void FixPadding(uint amount = 4)
         {
             if (amount < 1) return;
@@ -605,6 +630,18 @@ namespace DimpsSonicLib.IO
             uint padAmount = 0;
             while ((OutStream.Position + padAmount) % amount != 0) ++padAmount;
             WriteNulls(padAmount);
+        }
+
+        /// <summary>
+        /// Write padding bytes for alignment purposes. Default is 16
+        /// </summary>
+        /// <param name="size">Alignment size by power of 2</param>
+        /// <param name="stream">Target stream to write to</param>
+        public void WritePaddedAlignment(uint size = 16)
+        {
+            if (size < 1) return;
+            while (OutStream.Position % size != 0L)
+                OutStream.WriteByte(0);
         }
 
         public void WriteSignature(string signature)

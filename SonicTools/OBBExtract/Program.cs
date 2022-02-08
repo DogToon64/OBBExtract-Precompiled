@@ -38,21 +38,21 @@ namespace OBBExtract
 
                         if (Type != AndroidOBB.OBBType.NotOBB)
                         {
-                            Logger.Print("Unpacking \"" + Path.GetFileName(arg) + "\", Please wait...\n");
+                            Log.Print("Unpacking \"" + Path.GetFileName(arg) + "\", Please wait...\n");
                             AndroidOBB.ExtractOBBFile(arg, Type);
-                            Logger.PrintInfo("\nComplete!");
+                            Log.PrintInfo("\nComplete!");
                         }
                         else
-                            Logger.PrintError("File passed is not an OBB file.");
+                            Log.PrintError("File passed is not an OBB file.");
 
                     }
 
                     else
-                        Logger.PrintError("The given argument was not a file.");
+                        Log.PrintError("The given argument was not a file.");
                 }
 
                 else
-                    Logger.PrintError("OBBExtract was unable to parse the given argument(s)");
+                    Log.PrintError("OBBExtract was unable to parse the given argument(s)");
             }
             catch (Exception ex)
             {

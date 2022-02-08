@@ -61,9 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MethodTests\BinaryTests.cs" />
     <Compile Include="MethodTests\DSLType.cs" />
     <Compile Include="MethodTests\RLETest.cs" />
-    <Compile Include="ProgramCommon.cs" />
     <Compile Include="MethodTests\zlibTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

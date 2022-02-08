@@ -9,7 +9,7 @@ namespace DimpsSonicLib
     /// <summary>
     /// <b> WORK IN PROGRESS, DO NOT USE!!! </b>
     /// </summary>
-    public static class Logger
+    public static class Log
     {
         public static void Print(string text, bool overwrite = false)
         {
