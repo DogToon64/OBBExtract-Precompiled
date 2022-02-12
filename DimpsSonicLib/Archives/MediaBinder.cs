@@ -34,8 +34,7 @@ namespace DimpsSonicLib.Archives
                 return Version.Unknown;
         }
 
-        // Loading and Parsing
-        // TODO: un-fuck this logic
+        // Loading and Parsing.    TODO: un-fuck this logic
         public static AMB ReadAMB(Stream stream)
         {
             var reader = new BinderReader(stream);
@@ -66,7 +65,7 @@ namespace DimpsSonicLib.Archives
             else throw new NotImplementedException("Unknown AMB Version");
         }
 
-        // Extract to a given directory
+        // Extract to a given directory. DOES NOT BELONG IN LIBRARY
         public static void ExtractAMB(AMB amb, string dir)
         {
 
@@ -74,7 +73,7 @@ namespace DimpsSonicLib.Archives
 
         }
 
-        // Hmm
+        // Hmm                           DOES NOT BELONG IN LIBRARY
         public static void WriteAMB(AMB amb, Version ver = Version.Rev0, bool isBigEndian = false)
         {
 

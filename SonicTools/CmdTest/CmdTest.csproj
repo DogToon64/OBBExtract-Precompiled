@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="MethodTests\BinaryTests.cs" />
     <Compile Include="MethodTests\DSLType.cs" />
+    <Compile Include="MethodTests\ZNOReader.cs" />
     <Compile Include="MethodTests\RLETest.cs" />
     <Compile Include="MethodTests\zlibTest.cs" />
     <Compile Include="Program.cs" />

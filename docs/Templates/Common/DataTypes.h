@@ -4,7 +4,7 @@
 //  Common Data Types
 //  /// Other license, not GPL 3.0! (Tentative) ///
 //------------------------------------------------
-// #include "Utility.h"
+
 
 // Generic 
 typedef struct VECTOR2
@@ -26,6 +26,14 @@ typedef struct VECTOR4
     float Y                 <name="Y">;
     float Z                 <name="Z">;
     float W                 <name="W">;
+};
+
+typedef struct MATRIX
+{
+    VECTOR4 a <name="Row 1">;
+    VECTOR4 b <name="Row 2">;
+    VECTOR4 c <name="Row 3">;
+    VECTOR4 d <name="Row 4">;
 };
 
 typedef struct RGB
