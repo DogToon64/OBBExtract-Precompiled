@@ -168,7 +168,7 @@ namespace DimpsSonicLib.Archives
             if (ver == Binder.Version.Rev0)
             {
                 List<FileIndex> index = new List<FileIndex>();
-                SubHeader s = (SubHeader)sub;
+                SubHeader s = sub;
 
                 JumpTo(s.listPointer);
 
@@ -189,7 +189,7 @@ namespace DimpsSonicLib.Archives
             else if (ver == Binder.Version.Rev1)
             {
                 List<FileIndexR1> index = new List<FileIndexR1>();
-                SubHeader s = (SubHeader)sub;
+                SubHeader s = sub;
 
                 JumpTo(s.listPointer);
 
@@ -200,9 +200,10 @@ namespace DimpsSonicLib.Archives
                         filePointer = ReadUInt32(),
                         unknown1 = ReadUInt32(),
                         fileSize = ReadUInt32(),
+                        unknown2 = ReadUInt32(),
                         USR0 = ReadUInt16(),
                         USR1 = ReadUInt16(),
-                    });
+                    }); ;
                 }
                 return index;
             }
@@ -210,7 +211,7 @@ namespace DimpsSonicLib.Archives
             else if (ver == Binder.Version.Rev2)
             {
                 List<FileIndexR2> index = new List<FileIndexR2>();
-                SubHeader s = (SubHeader)sub;
+                SubHeader s = sub;
 
                 JumpTo(s.listPointer);
 
@@ -220,10 +221,12 @@ namespace DimpsSonicLib.Archives
                     {
                         filePointer = ReadUInt32(),
                         unknown1 = ReadUInt32(),
+                        unknown2 = ReadUInt32(),
                         fileSize = ReadUInt32(),
+                        unknown3 = ReadUInt32(),
                         USR0 = ReadUInt16(),
                         USR1 = ReadUInt16(),
-                    });
+                    }); ;
                 }
                 return index;
             }

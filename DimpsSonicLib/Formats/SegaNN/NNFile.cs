@@ -5,54 +5,118 @@ using System.IO;
 using DimpsSonicLib;
 using DimpsSonicLib.IO;
 
+//  HUGE WORK IN PROGRESS, DO NOT USE
 namespace DimpsSonicLib.Formats.SegaNN
 {
-    public class NNFile
+    public class NNFile : ExtendedBinaryReader
     {
-        public NNFile(string file)
-        {
-            Stream stream = File.OpenRead(file);
+        // Constructors
+        public NNFile(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { }
+        public NNFile(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
 
-            ReadNNFile(stream);
+
+        // Variables
+        public NN_INFO Info { get; set; }
+        public NN_OFFSETLIST OffsetList { get; set; }
+        public NN_FILENAME Footer { get; set; }
+
+        public NN_OBJECT Mesh { get; set; }
+        public NN_TEXTURELIST Textures { get; set; }
+        public NN_NODENAMELIST NodeNames { get; set; }
+        public NN_EFFECT Effect { get; set; }
+        public NN_MOTION Motion { get; set; }
+
+
+        // Methods
+        public static NNTYPE GetNNTYPE(string input)
+        {
+            if (input[1] == 'X')
+                return NNTYPE.NNX;
+            else if (input[1] == 'Z')
+                return NNTYPE.NNZ;
+            else
+                return NNTYPE.Unknown;
         }
 
-        public class SegaNN
+        public void ReadNNFile()
         {
-            public NN_INFO Info { get; set; }
-            public NN_OFFSETLIST OffsetList { get; set; }
-            public NN_FILENAME Footer { get; set; }
-        }
+            // Base chunks to be populated from reading
+            Info        = new NN_INFO();
+            OffsetList  = new NN_OFFSETLIST();
+            Footer      = new NN_FILENAME();
+            Mesh        = new NN_OBJECT();
+            Textures    = new NN_TEXTURELIST();
+            NodeNames   = new NN_NODENAMELIST();
+            Effect      = new NN_EFFECT();
+            Motion      = new NN_MOTION();
 
-        public SegaNN Data { get; set; } = new SegaNN();
+            Log.PrintInfo("Reading file info");
+            Info.Read(this);
 
-        public void ReadNNFile(Stream stream)
-        {
-            ExtendedBinaryReader reader = new ExtendedBinaryReader(stream);
+            // Determine the format we're reading from the info chunk's signature
+            NNTYPE type = GetNNTYPE(Info.chunkID);
 
-            Data.Info       = new NN_INFO();
-            Data.OffsetList = new NN_OFFSETLIST();
-            Data.Footer     = new NN_FILENAME();
+            if (type == NNTYPE.Unknown)
+            {
+                Log.PrintWarning("NNTYPE is unknown, this file format may not be supported yet.");
+                goto SkipNNRead;
+            }
 
-            Data.Info.chunkID           = reader.ReadSignature();
-            Data.Info.chunkSize         = reader.ReadUInt32();
-            Data.Info.chunkCount        = reader.ReadUInt32();
-            Data.Info.dataPointer       = reader.ReadUInt32();
-            Data.Info.dataSize          = reader.ReadUInt32();
-            Data.Info.offsetListPointer = reader.ReadUInt32();
-            Data.Info.offsetListSize    = reader.ReadUInt32();
-            Data.Info.version           = reader.ReadUInt32();
+            JumpTo(Info.dataPointer);
 
-            reader.JumpTo(Data.Info.dataPointer);
-            Console.WriteLine(reader.ReadSignature());
+            // Maybe move to the respective type's class file, replace this with a switch case for detecting the type?
+            for (int i = 0; i < Info.chunkCount; i++)
+            {
+                string identifier = ReadSignature();
+                JumpBehind(4);
 
-            reader.JumpTo(Data.Info.offsetListPointer);
-            Console.WriteLine(reader.ReadSignature());
+                switch (identifier.Remove(0, 2))
+                {
+                    case "OB":
+                        Log.PrintInfo("Reading mesh data");
+                        Mesh = new NNTypes.NNZ_OBJECT();
+                        Mesh.Read(this);
+                        break;
+
+                    case "NN":
+                        Log.PrintInfo("Reading bone names");
+                        NodeNames = new NNTypes.NNZ_NODENAMELIST();
+                        NodeNames.Read(this);
+                        break;
+
+                    case "TL":
+                        Log.PrintInfo("Reading texture list");
+                        Textures = new NNTypes.NNZ_TEXTURELIST();
+                        Textures.Read(this);
+                        break;
+
+                    case "EF":
+                        Log.PrintInfo("Reading effect");
+                        Effect = new NNTypes.NNZ_EFFECT();
+                        Effect.Read(this);
+                        break;
+
+                    case "MO":
+                        Log.PrintInfo("Reading animation");
+                        Motion = new NNTypes.NNZ_MOTION();
+                        Motion.Read(this);
+                        break;
+
+                    default:
+                        Log.PrintWarning("Default case hit");
+                        break;
+                }
+            }
+
+            JumpTo(Info.offsetListPointer);
 
 
-        }
 
+
+        SkipNNRead:;
+        }     
 
     }
 
-    
+
 }

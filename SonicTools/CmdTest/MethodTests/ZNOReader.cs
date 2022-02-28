@@ -5,6 +5,7 @@ using DimpsSonicLib.Formats.SegaNN;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CmdTest
@@ -16,12 +17,46 @@ namespace CmdTest
             // ZNO reading tests
             Stream stream = File.OpenRead(file);
 
-            NNFile a = new NNFile(file);
+            NNFile nnFile = new NNFile(stream);
+            nnFile.ReadNNFile();
 
 
-            Console.WriteLine("ZNO Data: \n");
+            Console.WriteLine("\nNinja Info           [{0}]\n" +
+                "Chunk Size          : {1}\n" +
+                "Chunk Count         : {2}\n" +
+                "Data Pointer        : {3}\n" +
+                "Data Size           : {4}\n" +
+                "Offset List Pointer : {5}\n" +
+                "Offset List Size    : {6}\n" +
+                "Version             : {7}\n",
+                nnFile.Info.chunkID, nnFile.Info.chunkSize, nnFile.Info.chunkCount, nnFile.Info.dataPointer,
+                nnFile.Info.dataSize, nnFile.Info.offsetListPointer, nnFile.Info.offsetListSize, nnFile.Info.version);
 
-            Console.WriteLine(a.Data.Info.dataSize);
+            if (nnFile.NodeNames.chunkID != null)
+            {
+                Console.WriteLine("Ninja Node Names     [{0}]\n" +
+                    "Chunk Size          : {1}\n", nnFile.NodeNames.chunkID, nnFile.NodeNames.chunkSize);
+            }
+
+            if (nnFile.Textures.chunkID != null)
+            {
+                Console.WriteLine("Ninja Texture List   [{0}]\nChunk Size          : {1}\n",
+                nnFile.Textures.chunkID, nnFile.Textures.chunkSize);
+            }
+
+            if (nnFile.Mesh.chunkID != null)
+            {
+                Console.WriteLine("Ninja Object         [{0}]\nChunk Size          : {1}\n",
+                nnFile.Mesh.chunkID, nnFile.Mesh.chunkSize);
+            }
+            
+            if (nnFile.Motion.chunkID != null)
+            {
+                Console.WriteLine("Ninja Motion         [{0}]\nChunk Size          : {1}\n",
+                nnFile.Motion.chunkID, nnFile.Motion.chunkSize);
+            }
+
+
         }
     }
 }
