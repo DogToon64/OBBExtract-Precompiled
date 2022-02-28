@@ -91,31 +91,31 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
                 {
                     case "OB":
                         Log.PrintInfo("Reading mesh data");
-                        nnf.Mesh = new NNTypes.NNZ_OBJECT();
+                        nnf.Mesh = new NNZ_OBJECT();
                         nnf.Mesh.Read(nnf);
                         break;
 
                     case "NN":
                         Log.PrintInfo("Reading bone names");
-                        nnf.NodeNames = new NNTypes.NNZ_NODENAMELIST();
+                        nnf.NodeNames = new NNZ_NODENAMELIST();
                         nnf.NodeNames.Read(nnf);
                         break;
 
                     case "TL":
                         Log.PrintInfo("Reading texture list");
-                        nnf.Textures = new NNTypes.NNZ_TEXTURELIST();
+                        nnf.Textures = new NNZ_TEXTURELIST();
                         nnf.Textures.Read(nnf);
                         break;
 
                     case "EF":
                         Log.PrintInfo("Reading effect");
-                        nnf.Effect = new NNTypes.NNZ_EFFECT();
+                        nnf.Effect = new NNZ_EFFECT();
                         nnf.Effect.Read(nnf);
                         break;
 
                     case "MO":
                         Log.PrintInfo("Reading animation");
-                        nnf.Motion = new NNTypes.NNZ_MOTION();
+                        nnf.Motion = new NNZ_MOTION();
                         nnf.Motion.Read(nnf);
                         break;
 
