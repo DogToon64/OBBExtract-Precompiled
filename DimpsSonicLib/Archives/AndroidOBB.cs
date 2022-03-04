@@ -133,23 +133,11 @@ namespace DimpsSonicLib.Archives
                 reader.JumpTo(filePtr);
                 byte[] bytes = reader.ReadBytes((int)fileSize);
 
-                // Get the directory information
+                // Get the directory name information
                 int entries = dirCount + fileCount;
                 reader.JumpTo(nameTablePointer + (entries * 8));
                 string[] fsData = reader.ReadNullTerminatedStringArray(entries);
                 string dirName = fsData[dirID - 1]; string fileName = fsData[dirCount + (nameID - 1)];
-
-                //// Get the directory name information
-                //reader.JumpTo(nameTablePointer + (dirID * 8));
-                //ulong dirNamePtr = reader.ReadUInt64();
-                //reader.JumpTo((long)(nameTablePointer + dirNamePtr));
-                //string dirName = reader.ReadNullTerminatedString();
-
-                //// Get the file name information
-                //reader.JumpTo(nameTablePointer + ((nameID * 8) + (dirCount * 8)));
-                //ulong fileNamePtr = reader.ReadUInt64();
-                //reader.JumpTo((long)(nameTablePointer + fileNamePtr));
-                //string fileName = reader.ReadNullTerminatedString();
 
                 // Write everything to disk
                 var newDir = baseDir + "/" + dirName;
@@ -194,24 +182,11 @@ namespace DimpsSonicLib.Archives
                 reader.JumpTo(filePtr);
                 byte[] bytes = reader.ReadBytes((int)fileSize);
 
-
-                // Get the directory information
+                // Get the directory name information
                 int entries = dirCount + fileCount;
                 reader.JumpTo(nameTablePointer + (entries * 4));
                 string[] fsData = reader.ReadNullTerminatedStringArray(entries);
                 string dirName = fsData[dirID - 1]; string fileName = fsData[dirCount + (nameID - 1)];
-
-                ////get the directory name information
-                //reader.JumpTo(nameTablePointer + (dirID * 4));
-                //uint dirNamePtr = reader.ReadUInt32();
-                //reader.JumpTo(nameTablePointer + dirNamePtr);
-                //string dirName = reader.ReadNullTerminatedString();
-
-                ////get the file name information
-                //reader.JumpTo(nameTablePointer + ((nameID * 4) + (dirCount * 4)));
-                //uint fileNamePtr = reader.ReadUInt32();
-                //reader.JumpTo(nameTablePointer + fileNamePtr);
-                //string fileName = reader.ReadNullTerminatedString();
 
                 //write everything to disk
                 var newDir = baseDir + "/" + dirName;
