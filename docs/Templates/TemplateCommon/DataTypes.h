@@ -1,10 +1,11 @@
 //------------------------------------------------
 //  Header file for 010 Editor Binary Template
-//  Author: Kass(RadiantDerg) 2021-09-18
+//  Author: Kass(RadiantDerg) 2022-03-07
 //  Common Data Types
 //  /// Other license, not GPL 3.0! (Tentative) ///
 //------------------------------------------------
-
+#ifndef DATATYPES_
+#define DATATYPES_
 
 // Generic 
 typedef struct VECTOR2
@@ -50,3 +51,5 @@ typedef struct RGBA
     float Blue              <name="Blue", bgcolor=cLtBlue>;
     float Alpha             <name="Alpha", bgcolor=cWhite>;
 };
+
+#endif

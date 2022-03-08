@@ -22,9 +22,17 @@ namespace AMBExtract
 
                 // Load AMB file from argument
                 Stream stream = File.OpenRead(arg);
-                AMB amb = Binder.ReadAMB(stream);
+                //AMB_O amb = Binder_O.ReadAMB(stream);
 
-                
+                BinderReader binder = new BinderReader(stream);
+                binder.ReadBinder();
+
+
+                Console.WriteLine("[Header]\nCompression Type: {0}\nIs Big Endian: {1}", binder.Header.compressionType, binder.Header.isBigEndian);
+
+                Console.WriteLine("[Sub Header]\nFile Count:    {0}\nData Pointer: {1}", binder.SubHeader.fileCount, binder.SubHeader.dataPointer);
+
+                Console.WriteLine("[File]\nFile Size:    {0}\nFile Pointer: {1}", binder.Index[0].fileSize, binder.Index[0].filePointer);
 
 
 

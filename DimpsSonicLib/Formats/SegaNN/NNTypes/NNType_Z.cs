@@ -78,57 +78,15 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
         }
     }
 
-    public class NNZ_FILE
+    public class NNZ_VERTEXANIMATION : NN_VERTEXANIMATION
     {
-        public static void ReadNNZ(NNFile nnf)
+        public override void Read(ExtendedBinaryReader reader)
         {
-            for (int i = 0; i < nnf.Info.chunkCount; i++)
-            {
-                string identifier = nnf.ReadSignature();
-                nnf.JumpBehind(4);
+            chunkID = reader.ReadSignature();
+            chunkSize = reader.ReadUInt32();
+            long jump = reader.BaseStream.Position;
 
-                switch (identifier.Remove(0, 2))
-                {
-                    case "OB":
-                        Log.PrintInfo("Reading mesh data");
-                        nnf.Mesh = new NNZ_OBJECT();
-                        nnf.Mesh.Read(nnf);
-                        break;
-
-                    case "NN":
-                        Log.PrintInfo("Reading bone names");
-                        nnf.NodeNames = new NNZ_NODENAMELIST();
-                        nnf.NodeNames.Read(nnf);
-                        break;
-
-                    case "TL":
-                        Log.PrintInfo("Reading texture list");
-                        nnf.Textures = new NNZ_TEXTURELIST();
-                        nnf.Textures.Read(nnf);
-                        break;
-
-                    case "EF":
-                        Log.PrintInfo("Reading effect");
-                        nnf.Effect = new NNZ_EFFECT();
-                        nnf.Effect.Read(nnf);
-                        break;
-
-                    case "MO":
-                        Log.PrintInfo("Reading animation");
-                        nnf.Motion = new NNZ_MOTION();
-                        nnf.Motion.Read(nnf);
-                        break;
-
-                    case "MA":
-                        Log.PrintInfo("Reading material anim");
-                        throw new NotImplementedException();
-                    //break;
-
-                    default:
-                        Log.PrintWarning("Default case hit");
-                        break;
-                }
-            }
+            reader.JumpAhead(chunkSize);
         }
     }
 }

@@ -4,7 +4,7 @@
 //  S4E2 Android Compressed File (header signature= ZIP!)
 //  Data is little endian
 //------------------------------------------------
-#include "Common/Utility.h"
+#include "../TemplateCommon/Utility.h"
 LittleEndian();
 
 

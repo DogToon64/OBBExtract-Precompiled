@@ -8,32 +8,32 @@ namespace DimpsSonicLib.Archives
     public class AMBHeader
     {
         public const string signature = "#AMB";
-        public uint version;
-        public const short unkVal1 = 0;
-        public const short unkVal2 = 0;
-        public bool isBigEndian = false;
-        public const byte unkVal3 = 0;
-        public const byte unkVal4 = 0;
-        public byte compressionType = 0;
+        public uint version { get; set; } = 0;
+        public short unkVal1 { get; set; } = 0;
+        public short unkVal2 { get; set; } = 0;
+        public bool isBigEndian { get; set; } = false;
+        public byte unkVal3 { get; set; } = 0;
+        public byte unkVal4 { get; set; } = 0;
+        public byte compressionType { get; set; } = 0;
     }
     #endregion
 
     #region Base version
     public class SubHeader
     {
-        public dynamic fileCount = 0;
-        public dynamic listPointer = 0;
-        public dynamic dataPointer = 0;
-        public dynamic nameTable = 0;
+        public dynamic fileCount   { get; set; } = 0;
+        public dynamic listPointer { get; set; } = 0;
+        public dynamic dataPointer { get; set; } = 0;
+        public dynamic nameTable   { get; set; } = 0;
     }
 
     public class FileIndex
     {
-        public dynamic filePointer = 0;
-        public dynamic fileSize = 0;
-        public dynamic unknown1 = 0;
-        public dynamic USR0 = 0;
-        public dynamic USR1 = 0;
+        public dynamic filePointer  { get; set; } = 0;
+        public dynamic fileSize     { get; set; } = 0;
+        public dynamic unknown1     { get; set; } = 0;
+        public ushort  USR0         { get; set; } = 0;
+        public ushort  USR1         { get; set; } = 0;
     }
     #endregion
 
@@ -42,10 +42,10 @@ namespace DimpsSonicLib.Archives
     {
         // uint fileCount
         // uint listPointer
-        public uint unknown1 = 0;
+        public uint unknown1 { get; set; } = 0;
         // uint dataPointer
         // uint nameTable
-        public uint unknown2 = 0;
+        public uint unknown2 { get; set; } = 0;
     }
 
     public class FileIndexR1 : FileIndex
@@ -53,7 +53,7 @@ namespace DimpsSonicLib.Archives
         // uint filePointer
         // uint unknown1
         // uint fileSize
-        public uint unknown2 = 0;
+        public uint unknown2 { get; set; } = 0;
         // ushort USR0
         // ushort USR1
     }
@@ -72,9 +72,9 @@ namespace DimpsSonicLib.Archives
     {
         // uint filePointer
         // uint unknown1
-        public uint unknown2 = 0;
+        public uint unknown2 { get; set; } = 0;
         // uint fileSize
-        public uint unknown3 = 0;
+        public uint unknown3 { get; set; } = 0;
         // ushort USR0
         // ushort USR1
     }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DimpsArcExtract": {
+      "commandName": "Project",
+      "commandLineArgs": "Ouya_res.obb Main_71.obb"
+    }
+  }
+}

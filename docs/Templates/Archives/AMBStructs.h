@@ -4,7 +4,7 @@
 //  Dimps AmFS: Memory Binder (.AMB)
 //  /// Other license, not GPL 3.0! (Tentative) ///
 //------------------------------------------------
-#include "../Common/Utility.h"
+#include "../TemplateCommon/Utility.h"
 
 typedef struct Header
 {

@@ -6,20 +6,173 @@ using DimpsSonicLib.IO;
 
 namespace DimpsSonicLib.Archives
 {
-    public class AMB
+    public class BinderReader : ExtendedBinaryReader
     {
-        public AMBHeader Header { get; set; }
-        public IEnumerable<SubHeader> SubHeader { get; set; }
-        public IEnumerable<FileIndex> FileIndex { get; set; }
-        public Binder.Version version { get; set; }
-    }
+        // Constructors
+        public BinderReader(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { Initialize(); }
+        public BinderReader(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { Initialize(); }
 
-    public class Binder
-    {
-        public enum Version
+        // Variables
+        public BINDER_HEADER Header { get; set; }
+        public BINDER_SUBHEADER SubHeader { get; set; }
+        public List<BINDER_FILE> Index { get; set; }
+
+        // Methods
+
+        public static Version GetBinderVersion(uint input)
         {
-            //Common, Type 1, Type 2
-            Rev0, Rev1, Rev2, Unknown
+            switch (input)
+            {
+                case 32:
+                    return Version.Rev0;
+                case 40:
+                    return Version.Rev1;
+                case 48: 
+                    return Version.Rev2;
+                default:
+                    return Version.Unknown;
+            }
+        }
+
+
+        public void Initialize()
+        {
+            Header    = new BINDER_HEADER();
+            SubHeader = new BINDER_SUBHEADER();
+            Index     = new List<BINDER_FILE>();
+        }
+
+        public void ReadBinder()
+        {
+            int  curr = 0;
+            long last;
+            string n = "";
+
+            Initialize();
+
+            Header.Read(this);
+
+            Version ver = GetBinderVersion(Header.version);
+
+            if (ver == Version.Unknown)
+            {
+                Log.PrintWarning("Binder seems to be an unknown version");
+                goto SkipBinderRead;
+            }
+
+            if (Header.compressionType != 0)
+            {
+                Log.PrintWarning("Compressed binders are currently not supported");
+                goto SkipBinderRead;
+            }
+
+            SubHeader = BinderSubHeader(ver);
+            SubHeader.Read(this);
+
+            Index = BinderFileIndex(ver);
+
+            for (int i = 0; i < SubHeader.fileCount; i++)
+            {
+                if (SubHeader.nameTable != 0)
+                {
+                    last = stream.Position;
+                    JumpTo(SubHeader.nameTable + (32 * curr));
+                    n = ReadLengthPrefixedString(32);
+                    JumpTo(last);
+                    curr++;
+                }
+         
+                switch (ver)
+                {
+                    case Version.Rev0:
+                        Index.Add(new BINDER_FILE()
+                        {
+                            name = n,
+                            filePointer = ReadUInt32(),
+                            unknown1 = ReadUInt32(),
+                            fileSize = ReadUInt32(),
+                            USR0 = ReadUInt16(),
+                            USR1 = ReadUInt16(),
+                        });
+                        break;
+
+                    case Version.Rev1:
+                        Index.Add(new BINDERv1_FILE()
+                        {
+                            name = n,
+                            filePointer = ReadUInt32(),
+                            unknown1 = ReadUInt32(),
+                            fileSize = ReadUInt32(),
+                            unknown2 = ReadUInt32(),
+                            USR0 = ReadUInt16(),
+                            USR1 = ReadUInt16(),
+                        });
+                        break;
+
+                    case Version.Rev2:
+                        Index.Add(new BINDERv2_FILE()
+                        {
+                            name = n,
+                            filePointer = ReadUInt32(),
+                            unknown1 = ReadUInt32(),
+                            unknown2 = ReadUInt32(),
+                            fileSize = ReadUInt32(),
+                            unknown3 = ReadUInt32(),
+                            USR0 = ReadUInt16(),
+                            USR1 = ReadUInt16(),
+                        });
+                        break;
+
+                    case Version.Unknown:
+                        throw new NotImplementedException();
+                    default:
+                        throw new Exception();
+                }
+            }       
+
+        SkipBinderRead:;
+        }
+
+        public dynamic BinderSubHeader(Version v)
+        {
+            switch (v)
+            {
+                case Version.Rev0:
+                    return new BINDER_SUBHEADER();
+                case Version.Rev1:
+                    return new BINDERv1_SUBHEADER();
+                case Version.Rev2:
+                    return new BINDERv2_SUBHEADER();
+                case Version.Unknown:
+                    throw new NotImplementedException();
+                default:
+                    throw new Exception();
+            }
+        }
+
+        public dynamic BinderFileIndex(Version v)
+        {
+            switch (v)
+            {
+                case Version.Rev0:
+                    return new List<BINDER_FILE>();
+                case Version.Rev1:
+                    return new List<BINDERv1_FILE>();
+                case Version.Rev2:
+                    return new List<BINDERv2_FILE>();
+                case Version.Unknown:
+                    throw new NotImplementedException();
+                default:
+                    throw new Exception();
+            }
+        }
+
+
+
+
+        public void WriteAMB()
+        {
+
         }
 
         public static Version GetAMBVersion(AMBHeader header)
@@ -33,16 +186,45 @@ namespace DimpsSonicLib.Archives
             else
                 return Version.Unknown;
         }
+    }
+
+    public class AMB_O
+    {
+        public AMBHeader Header { get; set; }
+        public IEnumerable<SubHeader> SubHeader { get; set; }
+        public IEnumerable<FileIndex> FileIndex { get; set; }
+        public Binder_O.Version_O version { get; set; }
+    }
+
+    public class Binder_O
+    {
+        public enum Version_O
+        {
+            //Common, Type 1, Type 2
+            Rev0, Rev1, Rev2, Unknown
+        }
+
+        public static Version_O GetAMBVersion(AMBHeader header)
+        {
+            if (header.version == 32)
+                return Version_O.Rev0;
+            else if (header.version == 40)
+                return Version_O.Rev1;
+            else if (header.version == 48)
+                return Version_O.Rev2;
+            else
+                return Version_O.Unknown;
+        }
 
         // Loading and Parsing.    TODO: un-fuck this logic
-        public static AMB ReadAMB(Stream stream)
+        public static AMB_O ReadAMB(Stream stream)
         {
-            var reader = new BinderReader(stream);
+            var reader = new BinderReader_O(stream);
             var header = reader.ReadHeader();
             reader.JumpTo(16);
             var ver = GetAMBVersion(header);
 
-            if (ver != Version.Unknown)
+            if (ver != Version_O.Unknown)
             {
                 if (header.compressionType != 0)
                     throw new Exception("Compressed binders are currently not supported");
@@ -60,13 +242,13 @@ namespace DimpsSonicLib.Archives
 
                 var fileIndex = reader.ReadFileIndex(fuck, ver);
 
-                return new AMB { Header = header, SubHeader = subHeader, FileIndex = fileIndex };
+                return new AMB_O { Header = header, SubHeader = subHeader, FileIndex = fileIndex };
             }
             else throw new NotImplementedException("Unknown AMB Version");
         }
 
         // Extract to a given directory. DOES NOT BELONG IN LIBRARY
-        public static void ExtractAMB(AMB amb, string dir)
+        public static void ExtractAMB(AMB_O amb, string dir)
         {
 
 
@@ -74,7 +256,7 @@ namespace DimpsSonicLib.Archives
         }
 
         // Hmm                           DOES NOT BELONG IN LIBRARY
-        public static void WriteAMB(AMB amb, Version ver = Version.Rev0, bool isBigEndian = false)
+        public static void WriteAMB(AMB_O amb, Version_O ver = Version_O.Rev0, bool isBigEndian = false)
         {
 
            // write from loaded or new AMB
@@ -83,10 +265,10 @@ namespace DimpsSonicLib.Archives
     }
 
 
-    public class BinderReader : ExtendedBinaryReader
+    public class BinderReader_O : ExtendedBinaryReader
     {
-        public BinderReader(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { }
-        public BinderReader(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
+        public BinderReader_O(Stream input, bool isBigEndian = false) : base(input, isBigEndian) { }
+        public BinderReader_O(Stream input, Encoding encoding, bool isBigEndian = false) : base(input, encoding, isBigEndian) { }
 
         // Methods
         public AMBHeader ReadHeader()
@@ -117,9 +299,9 @@ namespace DimpsSonicLib.Archives
             return header;
         }
 
-        public IEnumerable<SubHeader> ReadSubHeader(Binder.Version ver)
+        public IEnumerable<SubHeader> ReadSubHeader(Binder_O.Version_O ver)
         {
-            if (ver == Binder.Version.Rev0)
+            if (ver == Binder_O.Version_O.Rev0)
             {
                 List<SubHeader> sub = new List<SubHeader> { };
 
@@ -132,7 +314,7 @@ namespace DimpsSonicLib.Archives
                 });
                 return sub;
             }
-            else if (ver == Binder.Version.Rev1)
+            else if (ver == Binder_O.Version_O.Rev1)
             {
                 List<SubHeaderR1> sub = new List<SubHeaderR1> { };
 
@@ -147,7 +329,7 @@ namespace DimpsSonicLib.Archives
                 });
                 return sub;
             }
-            else if (ver == Binder.Version.Rev2)
+            else if (ver == Binder_O.Version_O.Rev2)
             {
                 List<SubHeaderR2> sub = new List<SubHeaderR2> { };
 
@@ -163,9 +345,9 @@ namespace DimpsSonicLib.Archives
             else throw new NotImplementedException("Unknown AMB Version");
         }
 
-        public IEnumerable<FileIndex> ReadFileIndex(SubHeader sub, Binder.Version ver)
+        public IEnumerable<FileIndex> ReadFileIndex(SubHeader sub, Binder_O.Version_O ver)
         {
-            if (ver == Binder.Version.Rev0)
+            if (ver == Binder_O.Version_O.Rev0)
             {
                 List<FileIndex> index = new List<FileIndex>();
                 SubHeader s = sub;
@@ -186,7 +368,7 @@ namespace DimpsSonicLib.Archives
                 return index;
             }
 
-            else if (ver == Binder.Version.Rev1)
+            else if (ver == Binder_O.Version_O.Rev1)
             {
                 List<FileIndexR1> index = new List<FileIndexR1>();
                 SubHeader s = sub;
@@ -208,7 +390,7 @@ namespace DimpsSonicLib.Archives
                 return index;
             }
 
-            else if (ver == Binder.Version.Rev2)
+            else if (ver == Binder_O.Version_O.Rev2)
             {
                 List<FileIndexR2> index = new List<FileIndexR2>();
                 SubHeader s = sub;
@@ -235,11 +417,11 @@ namespace DimpsSonicLib.Archives
         }
     }
 
-    public class BinderWriter : ExtendedBinaryWriter
+    public class BinderWriter_O : ExtendedBinaryWriter
     {
-        public BinderWriter(Stream output, bool isBigEndian = false) : base(output, isBigEndian) { }
+        public BinderWriter_O(Stream output, bool isBigEndian = false) : base(output, isBigEndian) { }
 
-        public BinderWriter(Stream output, Encoding encoding, bool isBigEndian = false) : base(output, encoding, isBigEndian) { }
+        public BinderWriter_O(Stream output, Encoding encoding, bool isBigEndian = false) : base(output, encoding, isBigEndian) { }
 
 
 

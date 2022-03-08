@@ -137,13 +137,13 @@ namespace DimpsSonicLib.Archives
                 int entries = dirCount + fileCount;
                 reader.JumpTo(nameTablePointer + (entries * 8));
                 string[] fsData = reader.ReadNullTerminatedStringArray(entries);
-                string dirName = fsData[dirID - 1]; string fileName = fsData[dirCount + (nameID - 1)];
+                string dirName = fsData[dirID]; string fileName = fsData[dirCount + (nameID)];
 
                 // Write everything to disk
-                var newDir = baseDir + "/" + dirName;
+                var newDir = baseDir + @"\" + dirName;
                 Directory.CreateDirectory(newDir);
-                Log.Print("Writing \"" + newDir + "/" + fileName + "\"");
-                File.WriteAllBytes((newDir + "/" + fileName), bytes);
+                Log.Print("Writing \"" + newDir + @"\" + fileName + "\"");
+                File.WriteAllBytes((newDir + @"\" + fileName), bytes);
                 reader.JumpTo(lastIndexPos);
             }
         }
@@ -186,13 +186,13 @@ namespace DimpsSonicLib.Archives
                 int entries = dirCount + fileCount;
                 reader.JumpTo(nameTablePointer + (entries * 4));
                 string[] fsData = reader.ReadNullTerminatedStringArray(entries);
-                string dirName = fsData[dirID - 1]; string fileName = fsData[dirCount + (nameID - 1)];
+                string dirName = fsData[dirID]; string fileName = fsData[dirCount + (nameID)];
 
                 //write everything to disk
-                var newDir = baseDir + "/" + dirName;
+                var newDir = baseDir + @"\" + dirName;
                 Directory.CreateDirectory(newDir);
-                Log.Print("Writing \"" + newDir + "/" + fileName + "\"");
-                File.WriteAllBytes((newDir + "/" + fileName), bytes);
+                Log.Print("Writing \"" + newDir + @"\" + fileName + "\"");
+                File.WriteAllBytes((newDir + @"\" + fileName), bytes);
                 reader.JumpTo(lastIndexPos);
             }
         }

@@ -41,6 +41,10 @@ namespace DimpsSonicLib.Formats.SegaNN
         public virtual void Read(IO.ExtendedBinaryReader reader)
         {
             chunkID             = reader.ReadSignature();
+
+            if (chunkID == "NCIF" || chunkID == "NEIF" || chunkID == "NGIF")
+                reader.IsBigEndian = true;
+
             chunkSize           = reader.ReadUInt32();
             chunkCount          = reader.ReadUInt32();
             dataPointer         = reader.ReadUInt32();
@@ -48,6 +52,11 @@ namespace DimpsSonicLib.Formats.SegaNN
             offsetListPointer   = reader.ReadUInt32();
             offsetListSize      = reader.ReadUInt32();
             version             = reader.ReadUInt32();
+        }
+
+        public virtual void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -64,7 +73,15 @@ namespace DimpsSonicLib.Formats.SegaNN
 
         public virtual void Read(IO.ExtendedBinaryReader reader)
         {
-            throw new NotImplementedException();
+            chunkID = reader.ReadSignature();
+            chunkSize = reader.ReadUInt32();
+            long jump = reader.BaseStream.Position;
+
+            reader.JumpAhead(8);
+
+            fileName = reader.ReadNullTerminatedString();
+
+            reader.JumpTo(jump + chunkSize);
         }
     }
 
@@ -190,4 +207,20 @@ namespace DimpsSonicLib.Formats.SegaNN
             throw new NotImplementedException();
         }
     }
+
+    // N*MA; Animation
+    public class NN_VERTEXANIMATION : NN_CHUNKBASE
+    {
+        public string chunkID { get; set; }
+        public dynamic chunkSize { get; set; }
+
+        public NN_VERTEXANIMATION() { }
+
+
+        public virtual void Read(IO.ExtendedBinaryReader reader)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

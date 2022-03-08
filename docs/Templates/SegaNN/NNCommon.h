@@ -1,16 +1,15 @@
 //------------------------------------------------
 //  Header file for 010 Editor Binary Template
-//  Author: Kass(RadiantDerg) 2022-02-07
+//  Author: Kass(RadiantDerg) 2022-03-07
 //  Reference: DarioSamo, RadfordHound, Argx2121
 //  SegaNN Formats (.*NO, .*NM, .*NV, ect..)
 //  /// Other license, not GPL 3.0! ///
 //------------------------------------------------
-//#include "Common/Utility.h"
-//#include "Common/DataTypes.h"
+#include "..\TemplateCommon\Utility.h"
+#include "..\TemplateCommon\DataTypes.h"
 
-//#include "..\TemplateCommon\Utility.h"
-//#include "..\TemplateCommon\DataTypes.h"
-
+#ifndef NN_STRUCTS_
+#define NN_STRUCTS_
 
 /////  NN Types  /////
 typedef struct NNS_TEXCOORD
@@ -41,9 +40,9 @@ typedef struct VECTOR3INT
     int Y                   <name="Y", hidden=true>;
     int Z                   <name="Z", hidden=true>;
 
-    local int XB = X * (180 / 32767);
-    local int YB = Y * (180 / 32767);
-    local int ZB = Z * (180 / 32767);
+    local int X_BAM = X * (180 / 32767);
+    local int Y_BAM = Y * (180 / 32767);
+    local int Z_BAM = Z * (180 / 32767);
 };
 
 
@@ -91,3 +90,5 @@ typedef struct NEND // End
     NN_CHUNKBASE a                      <hidden=true>;
     char pad[g_nextSize]                <hidden=true>;
 };
+
+#endif

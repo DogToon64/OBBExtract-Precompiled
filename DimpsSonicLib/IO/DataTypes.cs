@@ -60,6 +60,14 @@ namespace DimpsSonicLib
             Blue = blue;
         }
 
+        // If the values passed in are 0-255
+        public RGB(int red, int green, int blue, int alpha)
+        {
+            Red = (red / 255f);
+            Green = (green / 255f);
+            Blue = (blue / 255f);
+        }
+
         public override string ToString()
         {
             return $"({Red}, {Green}, {Blue})";
@@ -80,6 +88,15 @@ namespace DimpsSonicLib
             Green = green;
             Blue = blue;
             Alpha = alpha;
+        }
+
+        // If the values passed in are 0-255
+        public RGBA(int red, int green, int blue, int alpha)
+        {
+            Red = (red / 255f);
+            Green = (green / 255f);
+            Blue = (blue / 255f);
+            Alpha = (alpha / 255f);
         }
 
         public override string ToString()
