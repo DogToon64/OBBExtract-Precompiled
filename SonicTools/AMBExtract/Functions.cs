@@ -17,36 +17,58 @@ namespace AMBExtract
         {
             try
             {
-                // Create extraction folder named after current file
-
+                // Create folder to extract to
+                string newDir = Utility.CreateFolderFromFileName(arg);
+                Directory.CreateDirectory(newDir);
 
                 // Load AMB file from argument
                 Stream stream = File.OpenRead(arg);
-                //AMB_O amb = Binder_O.ReadAMB(stream);
 
+                // Parsing
                 BinderReader binder = new BinderReader(stream);
                 binder.ReadBinder();
+#if DEBUG
+                // [TESTING] Print Header and Sub Header information
+                Console.WriteLine("[HEADER]\nCompression Type: {0}\nIs Big Endian: {1}\n", binder.Header.compressionType, binder.Header.endianness);
+                Console.WriteLine("[SUB HEADER]\nFile Count:    {0}\nData Pointer: {1}\n", binder.SubHeader.fileCount, binder.SubHeader.dataPointer);
 
+                // [TESTING] Print info for each file in the AMB index list
+                for (int i = 0; i < (int)binder.SubHeader.fileCount; i++)
+                {
+                    Console.WriteLine("[FILE {0}]\nName:         {1}\nPointer:      {2}\n" +
+                        "Size:         {3}\nUnknown:      {4}\nUser 0:       {5}\nUser 1:       {6}\n",
+                        i,
+                        binder.Index[i].name,
+                        binder.Index[i].filePointer,
+                        binder.Index[i].fileSize,
+                        binder.Index[i].unknown1,
+                        binder.Index[i].USR0,
+                        binder.Index[i].USR1);
+                }
 
-                Console.WriteLine("[Header]\nCompression Type: {0}\nIs Big Endian: {1}", binder.Header.compressionType, binder.Header.isBigEndian);
+#else
+                Console.WriteLine("Compression Type: {0}\nIs Big Endian:    {1}", binder.Header.compressionType, binder.Header.endianness);
+                if (binder.SubHeader.fileCount != 0)
+                    Console.WriteLine("File Count:       {0}\n", binder.SubHeader.fileCount);
+#endif
 
-                Console.WriteLine("[Sub Header]\nFile Count:    {0}\nData Pointer: {1}", binder.SubHeader.fileCount, binder.SubHeader.dataPointer);
-
-                Console.WriteLine("[File]\nFile Size:    {0}\nFile Pointer: {1}", binder.Index[0].fileSize, binder.Index[0].filePointer);
-
-
-
-                //Binder.WriteAMB(amb);
-
-
-
-                // Create index based on current file
+                // Create index binary based on current file
 
 
 
                 // Extract data
+                List<byte[]> fileData = new List<byte[]>();
 
+                for (int i = 0; i < (int)binder.SubHeader.fileCount; i++)
+                {
+                    binder.JumpTo(binder.Index[i].filePointer);
+                    fileData.Add(binder.ReadBytes((int)binder.Index[i].fileSize));
+                    string fileName = binder.Index[i].name != "" ? binder.Index[i].name : $"file_{i}.bin"; 
 
+                    Console.WriteLine("Extracting \"{0}\"", fileName);
+
+                    File.WriteAllBytes((newDir + "\\" + fileName), fileData[i]);
+                }
 
             }
             catch (Exception ex)
@@ -59,7 +81,7 @@ namespace AMBExtract
         {
             try
             {
-                Log.PrintError("PackAMBFile Not Implemented\n");
+                throw new Exception("Binder repacking not yet implemented!\n");
 
                 // Try get either index binary or read from original.
 
@@ -80,37 +102,5 @@ namespace AMBExtract
         {
             
         }
-
-        //public static void CheckAMB(Stream stream)
-        //{
-        //#if DEBUG
-        //    var reader = new MemoryBinderReader(stream);
-        //    var header = reader.ReadHeader();
-            
-        //    Logger.PrintInfo("[DEBUG]");
-        //    MemoryBinder.Version ver = MemoryBinder.GetAMBVersion(header);
-        //    var sheader = reader.ReadSubHeader(ver);
-
-        //    switch (ver)
-        //    {
-        //        case MemoryBinder.Version.Rev0:
-        //            Logger.PrintWarning("AMB version:        Base Version");
-        //            break;
-        //        case MemoryBinder.Version.Rev1:
-        //            Logger.PrintWarning("AMB version:        Revision 1");
-        //            break;
-        //        case MemoryBinder.Version.Rev2:
-        //            Logger.PrintWarning("AMB version:        Revision 2");
-        //            break;
-        //        case MemoryBinder.Version.Unknown:
-        //            Logger.PrintWarning("AMB version:        Unknown Type");
-        //            break;
-        //    }
-
-        //    Logger.PrintWarning("Is big endian?:     " + header.isBigEndian.ToString());
-        //    Logger.PrintWarning("Compression type:   " + header.compressionType.ToString());
-        //    Logger.PrintInfo   ("Files in AMB:       " + "\n");  // Add after implementing covariance/contravariance
-        //#endif
-        //}
     }
 }

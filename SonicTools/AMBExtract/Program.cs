@@ -16,8 +16,10 @@ namespace AMBExtract
             {
                 if (args.Length == 0)
                 {
-                    Console.WriteLine("Usage: Drag an AMB file to extract or drag a valid extraction directory to repack an AMB file.");
-                    Console.WriteLine("Command-line Usage: AMBExtract <AMB File> OR AMBExtract <Path>");
+                    //Console.WriteLine("Usage: Drag an AMB file to extract or drag a valid extraction directory to repack an AMB file.");
+                    //Console.WriteLine("Command-line Usage: AMBExtract <AMB File> OR AMBExtract <Path>");
+                    Console.WriteLine("Usage: Drag an AMB file to extract contents. Compressed AMBs are not supported at this time.");
+                    Console.WriteLine("Command-line Usage: AMBExtract <AMB File>");
                 }
 
                 // Unpack AMB file(s)
@@ -31,7 +33,7 @@ namespace AMBExtract
 
                             if (!File.GetAttributes(file).HasFlag(FileAttributes.Directory))
                             {
-                                Log.Print("Unpacking \"" + Path.GetFileName(file) + "\"\n");
+                                Log.PrintInfo("Reading \"" + Path.GetFileName(file) + "\"\n");
                                 Functions.UnpackAMBFile(file);
                                 Console.WriteLine("\n");
                             }
@@ -41,7 +43,7 @@ namespace AMBExtract
                     }
                     else
                     {
-                        Log.Print("Unpacking \"" + Path.GetFileName(args[0]) + "\"");
+                        Log.PrintInfo("Reading \"" + Path.GetFileName(args[0]) + "\"");
                         Functions.UnpackAMBFile(args[0]);
                         Console.WriteLine();
                     }
@@ -50,16 +52,21 @@ namespace AMBExtract
                 // Pack AMB from Directory
                 else if (File.GetAttributes(args[0]).HasFlag(FileAttributes.Directory))
                 {
-                    Log.Print("Directory \"" + args[0] + "\" was passed in.");
+                    Log.PrintInfo("Directory \"" + args[0] + "\"\n");
                     Functions.PackAMBFile(args[0]);
                 }
-                else
-                    Log.PrintError("AMBExtract was unable to parse the given argument(s)");
 
+                else
+                {
+                    throw new Exception("AMBExtract was unable to parse the given argument(s)");
+                }
+
+                Log.PrintInfo("Complete! Press Enter to exit.");
             }
             catch (Exception ex)
             {
                 Log.PrintError("An error has occured:\n" + ex.ToString());
+                Log.Print("\n\nPress Enter to exit.");
             }
             Console.ReadLine();
         }

@@ -12,7 +12,7 @@ namespace DimpsArcExtract
             if (args.Length == 0)
             {
                 Console.WriteLine("Usage: Drag an archive (AMB or OBB) file to extract.");
-                Console.WriteLine("* Please note that this application does not yet support any OBB from Episode 1,\n" +
+                Console.WriteLine("* Please note that this application does not support any OBB from Episode 1,\n" +
                     "  as well as AMB files from the Windows Phone version of Episode 1.\n");
                 Console.WriteLine("Command-line Usage: ");
             }
@@ -32,8 +32,7 @@ namespace DimpsArcExtract
                     }
                     catch (Exception ex)
                     { Log.PrintError($"Exception message: {ex.Message}\n\nException: {ex}\n\n\n"); }
-                }
-                
+                }        
             }
 
             Console.WriteLine("\n\nPress enter to exit."); Console.ReadLine();

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DimpsSonicLib.Archives
 {
-    public enum Version
+    public enum BinderVersion
     {
         //Common, Type 1, Type 2
         Rev0, Rev1, Rev2, Unknown
@@ -16,28 +16,26 @@ namespace DimpsSonicLib.Archives
         public uint version { get; set; } = 0;
         public ushort unkVal1 { get; set; } = 0;
         public ushort unkVal2 { get; set; } = 0;
-        public bool isBigEndian { get; set; } = false;
+        public bool endianness { get; set; } = false;
         public byte unkVal3 { get; set; } = 0;
         public byte unkVal4 { get; set; } = 0;
         public byte compressionType { get; set; } = 0;
 
-        //BINDER_HEADER() { }
-
         public virtual void Read(IO.ExtendedBinaryReader reader)
         {
-            // Read endianness flag early and jump back
+            // Read endian flag early then jump back
             reader.JumpTo(12);
-            isBigEndian = reader.ReadByte() == 1 ? true : false;
+            endianness = reader.ReadByte() == 1 ? true : false;
             reader.JumpTo(4);
 
             // Set reader mode
-            reader.IsBigEndian = isBigEndian;
+            reader.IsBigEndian = endianness;
 
             version = reader.ReadUInt32();
             unkVal1 = reader.ReadUInt16();
             unkVal1 = reader.ReadUInt16();
 
-            reader.JumpAhead(1); // skip endian flag that we already read
+            reader.JumpAhead(1); // skip the endian flag that we already checked
 
             unkVal3 = reader.ReadByte();
             unkVal4 = reader.ReadByte();
@@ -50,7 +48,7 @@ namespace DimpsSonicLib.Archives
             writer.Write(version);
             writer.Write(unkVal1);
             writer.Write(unkVal2);
-            writer.Write(isBigEndian ? (byte)1 : (byte)0);
+            writer.Write(endianness ? (byte)1 : (byte)0);
             writer.Write(unkVal3);
             writer.Write(unkVal4);
             writer.Write(compressionType);
@@ -63,8 +61,6 @@ namespace DimpsSonicLib.Archives
         public dynamic listPointer { get; set; } = 0;
         public dynamic dataPointer { get; set; } = 0;
         public dynamic nameTable { get; set; } = 0;
-
-        //BINDER_SUBHEADER() { }
 
         public virtual void Read(IO.ExtendedBinaryReader reader)
         {
@@ -91,8 +87,6 @@ namespace DimpsSonicLib.Archives
         public dynamic unknown1 { get; set; } = 0;
         public dynamic USR0 { get; set; } = 0;
         public dynamic USR1 { get; set; } = 0;
-
-        //BINDER_FILE() { }
     }
 
 
@@ -168,5 +162,17 @@ namespace DimpsSonicLib.Archives
         public uint unknown3 { get; set; } = 0;
         // ushort USR0
         // ushort USR1
+    }
+
+    public class BINDER_FILEA : BINDER_FILE
+    {
+        //public string name { get; set; } = "";
+        //public uint filePointer { get; set; } = 0;
+        //public uint unknown1 { get; set; } = 0;
+        public uint unknown2 { get; set; } = 0;
+        public uint unknown3 { get; set; } = 0;
+        //public uint fileSize { get; set; } = 0;
+        //public ushort USR0 { get; set; } = 0;
+        //public ushort USR1 { get; set; } = 0;
     }
 }

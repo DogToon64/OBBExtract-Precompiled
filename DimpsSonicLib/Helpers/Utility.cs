@@ -35,7 +35,21 @@ namespace DimpsSonicLib
         public static string CreateDirectoryAtFileLocation(string file, string dirName)
         {
             var dir = Path.GetFullPath(file).Replace(Path.GetFileName(file), "") + dirName;
-            Console.WriteLine("Dir@FileLocation: " + dir);
+            //Console.WriteLine("Dir@FileLocation: " + dir);
+            return dir;
+        }
+
+        public static string CreateFolderFromFileName(string file, string targetDir = "", string append = "")
+        {
+            string dir;
+            var fileName = Path.GetFileNameWithoutExtension(file);
+
+            if (targetDir != "")
+                dir = targetDir + "\\" + fileName + append;
+            else
+                dir = Path.GetFullPath(file).Replace(Path.GetFileName(file), "") + fileName + append;
+
+            //Console.WriteLine("FileFolder: " + dir);
             return dir;
         }
 
