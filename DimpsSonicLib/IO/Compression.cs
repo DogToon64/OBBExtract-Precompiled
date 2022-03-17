@@ -17,6 +17,14 @@ namespace DimpsSonicLib.IO
             // return packedStream;
         }
 
+        public static byte[] CompressZLibChunk(byte[] input)
+        {
+            // ...
+
+            throw new NotImplementedException("zlib not implemented!");
+            // return packedStream;
+        }
+
         public static Stream DecompressStream(Stream input)
         {
             // ...
