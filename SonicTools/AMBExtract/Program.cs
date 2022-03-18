@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using DimpsSonicLib;
 
 namespace AMBExtract
@@ -18,8 +19,12 @@ namespace AMBExtract
                 {
                     //Console.WriteLine("Usage: Drag an AMB file to extract or drag a valid extraction directory to repack an AMB file.");
                     //Console.WriteLine("Command-line Usage: AMBExtract <AMB File> OR AMBExtract <Path>");
-                    Console.WriteLine("Usage: Drag an AMB file to extract contents. Compressed AMBs are not supported at this time.");
+                    Console.WriteLine("Usage: Drag an AMB file to extract contents. Repacking AMBs is not supported at this time.");
                     Console.WriteLine("Command-line Usage: AMBExtract <AMB File>");
+
+                    Console.WriteLine("\nExiting in 3 seconds...");
+                    Thread.Sleep(3000);
+                    Environment.Exit(0);
                 }
 
                 // Unpack AMB file(s)
@@ -61,14 +66,15 @@ namespace AMBExtract
                     throw new Exception("AMBExtract was unable to parse the given argument(s)");
                 }
 
-                Log.PrintInfo("Complete! Press Enter to exit.");
+                Log.PrintInfo("Complete! Exiting in 3 seconds...");
+                Thread.Sleep(3000);
             }
             catch (Exception ex)
             {
                 Log.PrintError("An error has occured:\n" + ex.ToString());
                 Log.Print("\n\nPress Enter to exit.");
+                Console.ReadLine();
             }
-            Console.ReadLine();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace AMBExtract
                     Console.WriteLine("[FILE {0}]\nName:         {1}\nPointer:      {2}\n" +
                         "Size:         {3}\nUnknown:      {4}\nUser 0:       {5}\nUser 1:       {6}\n",
                         i,
-                        binder.Index[i].name,
+                        binder.FileSys.Count != 0 && binder.FileSys[i] != "" ? binder.FileSys[i] : $"NAME IS NULL! (ID:{i})",
                         binder.Index[i].filePointer,
                         binder.Index[i].fileSize,
                         binder.Index[i].unknown1,
@@ -57,17 +57,42 @@ namespace AMBExtract
 
 
                 // Extract data
-                List<byte[]> fileData = new List<byte[]>();
-
                 for (int i = 0; i < (int)binder.SubHeader.fileCount; i++)
                 {
-                    binder.JumpTo(binder.Index[i].filePointer);
-                    fileData.Add(binder.ReadBytes((int)binder.Index[i].fileSize));
-                    string fileName = binder.Index[i].name != "" ? binder.Index[i].name : $"file_{i}.bin"; 
+                    string fileName = binder.FileSys.Count != 0 && binder.FileSys[i] != "" ? binder.FileSys[i] : $"file_{i}.bin";
 
                     Console.WriteLine("Extracting \"{0}\"", fileName);
 
-                    File.WriteAllBytes((newDir + "\\" + fileName), fileData[i]);
+                    // Scan for ZIP! signature in file
+                    MemoryStream check = new MemoryStream();
+                    check.Write(binder.FileData[i], 0, binder.FileData[i].Length);
+                    ExtendedBinaryReader c = new ExtendedBinaryReader(check);
+                    c.JumpTo(0);
+
+                    // Decompress the file if signature is detected
+                    if (c.ReadSignature() == "ZIP!")
+                    {
+                        Log.PrintWarning("File appears to be compressed, attempting to decompress it...");
+                        try
+                        {
+                            c.JumpTo(20);
+                            byte[] fileIn = c.ReadBytes(binder.FileData[i].Length);
+                            byte[] fileOut = Compression.DecompressZlibChunk(fileIn);
+
+                            File.WriteAllBytes((newDir + "\\" + fileName), fileOut);
+                            Console.WriteLine("Please note that some DDS files may actually be a Khronos Texture file (KTX)\n");
+                        }
+                        catch
+                        {
+                            // Some of them have a different header layout, so that's likely the cause lol
+                            Log.PrintError("Failed decompression attempt! Saving as original instead.");
+                            File.WriteAllBytes((newDir + "\\" + fileName), binder.FileData[i]);
+                        }                       
+                    }
+                    else
+                    {
+                        File.WriteAllBytes((newDir + "\\" + fileName), binder.FileData[i]);
+                    }            
                 }
 
             }

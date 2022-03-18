@@ -16,6 +16,8 @@ namespace DimpsSonicLib.Archives
         public BINDER_HEADER Header { get; set; }
         public BINDER_SUBHEADER SubHeader { get; set; }
         public List<BINDER_FILEA> Index { get; set; }
+        public List<byte[]> FileData { get; set; }
+        public List<string> FileSys { get; set; }
 
         // Methods
         public static BinderVersion GetBinderVersion(uint input)
@@ -39,44 +41,63 @@ namespace DimpsSonicLib.Archives
             Header    = new BINDER_HEADER();
             SubHeader = new BINDER_SUBHEADER();
             Index     = new List<BINDER_FILEA>();
+            FileData  = new List<byte[]>();
+            FileSys   = new List<string>();
         }
 
 
         public void ReadBinder()
         {
-            int    curr = 0;
-            long   last;
-            string Name = "";
-
+            // Init variables
             Initialize();
 
+            // Read the Header
             Header.Read(this);
 
+            // Version Check
             BinderVersion ver = GetBinderVersion(Header.version);
-
-
             if (ver == BinderVersion.Unknown)
                 throw new Exception("Binder seems to be an unknown version");
 
+            // Read a compressed chunk separately if detected
             if (Header.compressionType != 0)
-                throw new Exception("Compressed binders are not currently supported");
+            {
+                MemoryStream result = new MemoryStream();
+
+                JumpAhead(4);
+                byte[] data = ReadBytes((int)(BaseStream.Length - 20));
+                byte[] deflated = Compression.DecompressZlibChunk(data);
+
+                result.Write(deflated, 0, deflated.Length);
+
+                ExtendedBinaryReader read = new ExtendedBinaryReader(result);
+
+                // Same as below, but isolated
+                ReadCompressedContents(read, ver);
+
+                return;
+            }
 
 
+            // Read Sub Header
             SubHeader = BinderSubHeader(ver);
             SubHeader.Read(this);
-            
 
+            // Read BinderFS data if possible
+            if (SubHeader.nameTable != 0)
+            {
+                for (uint j = 0; j < SubHeader.fileCount; j++)
+                {
+                    JumpTo((long)SubHeader.nameTable + (32 * j));
+                    FileSys.Add(ReadNullTerminatedString());   
+                }
+            }
+
+            JumpTo((int)SubHeader.listPointer);
+
+            // Read the File Index
             for (uint i = 0; i < SubHeader.fileCount; i++)
             {
-                if (SubHeader.nameTable != 0)
-                {
-                    last = stream.Position;
-                    JumpTo((long)SubHeader.nameTable + (32 * curr));
-                    Name = ReadNullTerminatedString();
-                    JumpTo(last);
-                    curr++;
-                }
-         
                 switch (ver)
                 {
                     case BinderVersion.Rev0:
@@ -87,7 +108,6 @@ namespace DimpsSonicLib.Archives
                             unknown1 = ReadUInt32(),
                             USR0 = ReadUInt16(),
                             USR1 = ReadUInt16(),
-                            name = Name,
                         });
                         break;
 
@@ -100,7 +120,6 @@ namespace DimpsSonicLib.Archives
                             unknown1 = ReadUInt32(),
                             USR0 = ReadUInt16(),
                             USR1 = ReadUInt16(),
-                            name = Name,
                         });
                         break;
 
@@ -114,7 +133,6 @@ namespace DimpsSonicLib.Archives
                             unknown1 = ReadUInt32(),
                             USR0 = ReadUInt16(),
                             USR1 = ReadUInt16(),
-                            name = Name,
                         });
                         break;
 
@@ -123,9 +141,96 @@ namespace DimpsSonicLib.Archives
                     default:
                         throw new Exception();
                 }
-            }       
+            }
+
+            for (int i = 0; i < (int)SubHeader.fileCount; i++)
+            {
+                JumpTo(Index[i].filePointer);
+                FileData.Add(ReadBytes((int)Index[i].fileSize));
+            }
         }
 
+
+
+        // Same as above, but isolated to read decompressed contents
+        public void ReadCompressedContents(ExtendedBinaryReader r, BinderVersion ver)
+        {
+            SubHeader = BinderSubHeader(ver);
+            r.JumpTo(0);
+            SubHeader.Read(r);
+
+            if (SubHeader.nameTable != 0)
+            {
+                for (uint j = 0; j < SubHeader.fileCount; j++)
+                {
+                    r.JumpTo((long)(SubHeader.nameTable - 16) + (32 * j));
+                    FileSys.Add(r.ReadNullTerminatedString());                    
+                }
+            }
+
+            r.JumpTo(SubHeader.listPointer - 16);
+
+            for (uint i = 0; i < SubHeader.fileCount; i++)
+            {
+                switch (ver)
+                {
+                    case BinderVersion.Rev0:
+                        Index.Add(new BINDER_FILEA()
+                        {
+                            filePointer = r.ReadUInt32(),
+                            fileSize = r.ReadUInt32(),
+                            unknown1 = r.ReadUInt32(),
+                            USR0 = r.ReadUInt16(),
+                            USR1 = r.ReadUInt16(),
+                        });
+                        break;
+
+                    case BinderVersion.Rev1:
+                        Index.Add(new BINDER_FILEA()
+                        {
+                            filePointer = r.ReadUInt32(),
+                            unknown2 = r.ReadUInt32(),
+                            fileSize = r.ReadUInt32(),
+                            unknown1 = r.ReadUInt32(),
+                            USR0 = r.ReadUInt16(),
+                            USR1 = r.ReadUInt16(),
+                        });
+                        break;
+
+                    case BinderVersion.Rev2:
+                        Index.Add(new BINDER_FILEA()
+                        {
+                            filePointer = r.ReadUInt32(),
+                            unknown2 = r.ReadUInt32(),
+                            unknown3 = r.ReadUInt32(),
+                            fileSize = r.ReadUInt32(),
+                            unknown1 = r.ReadUInt32(),
+                            USR0 = r.ReadUInt16(),
+                            USR1 = r.ReadUInt16(),
+                        });
+                        break;
+
+                    case BinderVersion.Unknown:
+                        throw new NotImplementedException();
+                    default:
+                        throw new Exception();
+                }
+            }
+
+            for (int i = 0; i < (int)SubHeader.fileCount; i++)
+            {
+                Console.WriteLine("CMP File Pointer:  " + (Index[i].filePointer));
+
+                if (Index[i].filePointer != 0)
+                    r.JumpTo((Index[i].filePointer - 16));
+                else
+                    r.JumpTo(Index[i].filePointer);
+
+                FileData.Add(r.ReadBytes((int)Index[i].fileSize));
+            }
+        }
+
+        // Returns the proper Sub Header type depending on the version
         public dynamic BinderSubHeader(BinderVersion v)
         {
             switch (v)
@@ -143,28 +248,7 @@ namespace DimpsSonicLib.Archives
             }
         }
 
-        //public dynamic BinderFileIndex(BinderVersion v)
-        //{
-        //    switch (v)
-        //    {
-        //        case BinderVersion.Rev0:
-        //            return new List<BINDER_FILE>();
-        //        case BinderVersion.Rev1:
-        //            return new List<BINDERv1_FILE>();
-        //        case BinderVersion.Rev2:
-        //            return new List<BINDERv2_FILE>();
-        //        case BinderVersion.Unknown:
-        //            throw new NotImplementedException();
-        //        default:
-        //            throw new Exception();
-        //    }
-        //}
 
-
-        public void WriteAMB()
-        {
-
-        }
     }
 
 

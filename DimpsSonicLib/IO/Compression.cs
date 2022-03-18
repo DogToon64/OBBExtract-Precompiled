@@ -3,52 +3,69 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using DimpsSonicLib;
+using ICSharpCode.SharpZipLib.Zip.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace DimpsSonicLib.IO
 {
     public class Compression
     {
         #region zlib
-        public static Stream CompressStream(Stream input, int type)
+        /// <summary>
+        /// Compresses an array of bytes using zlib
+        /// </summary>
+        /// <param name="input">Byte array to deflate</param>
+        /// <param name="type">Compression level 0-9. Default = 6 (DEFAULT_COMPRESSION)</param>
+        /// <returns>Compressed byte array</returns>
+        public static byte[] CompressZlibChunk(byte[] input, int type = 6)
         {
-            // ...
+            MemoryStream result = new MemoryStream();
+            DeflaterOutputStream zlib = new DeflaterOutputStream(result, new Deflater(type));
 
-            throw new NotImplementedException("zlib not implemented!");
-            // return packedStream;
+            zlib.Write(input, 0, input.Length);
+            zlib.Finish();
+
+            return result.ToArray();
         }
 
-        public static byte[] CompressZLibChunk(byte[] input)
+        /// <summary>
+        /// Decompresses an array of zlibbed bytes
+        /// </summary>
+        /// <param name="input">Byte array to inflate</param>
+        /// <returns>Decompressed byte array</returns>
+        public static byte[] DecompressZlibChunk(byte[] input)
         {
-            // ...
+            MemoryStream source = new MemoryStream(input);
+            byte[] result = null;
 
-            throw new NotImplementedException("zlib not implemented!");
-            // return packedStream;
-        }
+            using (MemoryStream output = new MemoryStream())
+            {
+                using (InflaterInputStream zlib = new InflaterInputStream(source))
+                {
+                    zlib.CopyTo(output);
+                }
+                result = output.ToArray();
+            }
 
-        public static Stream DecompressStream(Stream input)
-        {
-            // ...
-
-            throw new NotImplementedException("zlib not implemented!");
-            // return unpackedStream; 
+            return result;
         }
         #endregion
 
         #region Dimps RLE 
-        public static Stream NitroRLEncode(Stream input)
+        public static byte[] NitroRLEncode(byte[] input)
         {
             // ...
 
             throw new NotImplementedException("Run-length encoding not implemented!");
-            // return encodedStream;
+            // return encodedData;
         }
 
-        public static Stream NitroRLDecode(Stream input)
+        public static byte[] NitroRLDecode(byte[] input)
         {
             // ...
 
             throw new NotImplementedException("Run-length decoding not implemented!");
-            // return decodedStream; 
+            // return decodedData; 
         }
         #endregion
     }
