@@ -17,14 +17,14 @@ namespace AMBExtract
         {
             try
             {
-                // Create folder to extract to
+                // Create extraction directory
                 string newDir = Utility.CreateFolderFromFileName(arg);
                 Directory.CreateDirectory(newDir);
 
-                // Load AMB file from argument
+                // Load AMB file
                 Stream stream = File.OpenRead(arg);
 
-                // Parsing
+                // Parse the AMB
                 BinderReader binder = new BinderReader(stream);
                 binder.ReadBinder();
 #if DEBUG
@@ -45,7 +45,6 @@ namespace AMBExtract
                         binder.Index[i].USR0,
                         binder.Index[i].USR1);
                 }
-
 #else
                 Console.WriteLine("Compression Type: {0}\nIs Big Endian:    {1}", binder.Header.compressionType, binder.Header.endianness);
                 if (binder.SubHeader.fileCount != 0)
@@ -59,35 +58,57 @@ namespace AMBExtract
                 // Extract data
                 for (int i = 0; i < (int)binder.SubHeader.fileCount; i++)
                 {
+                    bool error = false;
                     string fileName = binder.FileSys.Count != 0 && binder.FileSys[i] != "" ? binder.FileSys[i] : $"file_{i}.bin";
 
                     Console.WriteLine("Extracting \"{0}\"", fileName);
 
-                    // Scan for ZIP! signature in file
-                    MemoryStream check = new MemoryStream();
-                    check.Write(binder.FileData[i], 0, binder.FileData[i].Length);
-                    ExtendedBinaryReader c = new ExtendedBinaryReader(check);
-                    c.JumpTo(0);
+                    // Check the file data for a ZIP! signature
+                    var fileCheck = new ExtendedBinaryReader(new MemoryStream(binder.FileData[i]));
+                    fileCheck.JumpTo(0);
 
-                    // Decompress the file if signature is detected
-                    if (c.ReadSignature() == "ZIP!")
+                    // Decompress the file if ZIP! signature is detected
+                    if (fileCheck.ReadSignature() == "ZIP!")
                     {
-                        Log.PrintWarning("File appears to be compressed, attempting to decompress it...");
-                        try
-                        {
-                            c.JumpTo(20);
-                            byte[] fileIn = c.ReadBytes(binder.FileData[i].Length);
-                            byte[] fileOut = Compression.DecompressZlibChunk(fileIn);
+                        byte[] fileOut = null;
+                        Log.PrintWarning(" > File appears to be compressed, attempting to decompress it...");
+                        fileCheck.JumpTo(8);
 
-                            File.WriteAllBytes((newDir + "\\" + fileName), fileOut);
-                            Console.WriteLine("Please note that some DDS files may actually be a Khronos Texture file (KTX)\n");
-                        }
-                        catch
+                        // Attempt to figure out what kind of ZIP! header we're dealing with.
+                        if (fileCheck.ReadUInt32() != 0)
                         {
-                            // Some of them have a different header layout, so that's likely the cause lol
-                            Log.PrintError("Failed decompression attempt! Saving as original instead.");
+                            try     // ZIP! type is uint32
+                            {
+                                byte[] fileIn = fileCheck.ReadBytes(binder.FileData[i].Length);
+                                fileOut = Compression.DecompressZlibChunk(fileIn);
+                            }
+                            catch
+                            { error = true; }
+                        }
+                        else
+                        {
+                            fileCheck.JumpTo(20);
+                            try     // ZIP! type is uint64
+                            {
+                                byte[] fileIn = fileCheck.ReadBytes(binder.FileData[i].Length);
+                                fileOut = Compression.DecompressZlibChunk(fileIn);
+                            }
+                            catch
+                            { error = true; }
+                        }
+
+                        // Write the result file. Save raw file data if ZIP! section fails
+                        if (!error)
+                        {
+                            Console.SetCursorPosition(67, (Console.CursorTop - 1));
+                            Log.PrintInfo("Done");
+                            File.WriteAllBytes((newDir + "\\" + fileName), fileOut);
+                        }
+                        else
+                        {
+                            Log.PrintError("Failed decompression attempt! Saving original data instead.");
                             File.WriteAllBytes((newDir + "\\" + fileName), binder.FileData[i]);
-                        }                       
+                        }                     
                     }
                     else
                     {

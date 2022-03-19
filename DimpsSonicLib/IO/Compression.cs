@@ -51,6 +51,7 @@ namespace DimpsSonicLib.IO
         }
         #endregion
 
+
         #region Dimps RLE 
         public static byte[] NitroRLEncode(byte[] input)
         {
@@ -67,6 +68,8 @@ namespace DimpsSonicLib.IO
             throw new NotImplementedException("Run-length decoding not implemented!");
             // return decodedData; 
         }
+
+
         #endregion
     }
 }

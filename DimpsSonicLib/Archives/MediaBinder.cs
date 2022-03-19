@@ -59,8 +59,10 @@ namespace DimpsSonicLib.Archives
             if (ver == BinderVersion.Unknown)
                 throw new Exception("Binder seems to be an unknown version");
 
+            int compType = Header.compressionType;
+
             // Read a compressed chunk separately if detected
-            if (Header.compressionType != 0)
+            if (compType == 2)
             {
                 MemoryStream result = new MemoryStream();
 
@@ -77,7 +79,11 @@ namespace DimpsSonicLib.Archives
 
                 return;
             }
-
+            
+            if (compType != 0 && compType != 2)
+            {
+                Log.PrintWarning("Unknown compression type detected: " + compType);
+            }
 
             // Read Sub Header
             SubHeader = BinderSubHeader(ver);
@@ -219,8 +225,6 @@ namespace DimpsSonicLib.Archives
 
             for (int i = 0; i < (int)SubHeader.fileCount; i++)
             {
-                Console.WriteLine("CMP File Pointer:  " + (Index[i].filePointer));
-
                 if (Index[i].filePointer != 0)
                     r.JumpTo((Index[i].filePointer - 16));
                 else

@@ -23,7 +23,7 @@ namespace OBBExtract
                 if (!flag)
                 {
                     Console.WriteLine("Usage: Drag an OBB file to extract its contents.");
-                    Console.WriteLine("Please note that this application does not yet support any OBB from Episode 1\n");
+                    Console.WriteLine("Please note that this application does NOT support any OBB from Episode 1\n");
                     Console.WriteLine("Press enter to Exit.");
                     Console.ReadLine();
                 }
@@ -31,37 +31,45 @@ namespace OBBExtract
                 // File Checking
                 else if (flag)
                 {
-                    var arg = args[0];
-                    if (File.Exists(arg))
-                    {
-                        var Type = AndroidOBB.DetermineOBBType(arg);
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                        if (Type != AndroidOBB.OBBType.NotOBB)
+                    foreach (var arg in args)
+                    {
+                        if (File.Exists(arg))
                         {
-                            Log.Print("Unpacking \"" + Path.GetFileName(arg) + "\", Please wait...\n");
-                            AndroidOBB.ExtractOBBFile(arg, Type);
-                            Log.PrintInfo("\nComplete!");
+                            var Type = AndroidOBB.DetermineOBBType(arg);
+
+                            if (Type != AndroidOBB.OBBType.NotOBB)
+                            {
+                                Log.PrintInfo("Unpacking \"" + Path.GetFileName(arg) + "\", please wait...");
+
+                                AndroidOBB.ExtractOBBFile(arg, Type);
+
+                                Log.PrintInfo("\nDone\n");
+                            }
+                            else
+                                Log.PrintError("File passed is not an OBB file.");
                         }
                         else
-                            Log.PrintError("File passed is not an OBB file.");
-
+                            Log.PrintError("The given argument was not a file.");
                     }
 
-                    else
-                        Log.PrintError("The given argument was not a file.");
+                    Log.PrintInfo("\nComplete!");
+                    watch.Stop();
+                    TimeSpan ts = watch.Elapsed;
+                    Console.WriteLine("Time elapsed: {0}{01:0}.{2:0} Seconds.", ts.Minutes != 0 ? (ts.Minutes + " Minute(s), "): "", ts.Seconds, ts.Milliseconds / 10);
                 }
-
                 else
                     Log.PrintError("OBBExtract was unable to parse the given argument(s)");
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("An error has occured:\n\n" + ex.Message);
-                Console.WriteLine("\nPress enter to Exit.");
+                Log.PrintError("An error has occured:\n\n");
+                Log.PrintError(ex.ToString());
+                Log.Print("\nPress enter to Exit.");
                 Console.ReadLine();
             }
-            Console.ResetColor();
+            Log.Print("\nPress enter to Exit.");
             Console.ReadLine();
         }
     }

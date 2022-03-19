@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using DimpsSonicLib;
 
@@ -11,7 +12,12 @@ namespace AMBExtract
 
         static void Main(string[] args)
         {
+#if STAGING
+            Console.WriteLine("<> AMBExtract <>\n----------------");
+            Log.PrintWarning(" >> THIS IS A STAGING BUILD, THERE *WILL* BE BUGS! <<\n");
+#else
             Console.WriteLine("<> AMBExtract <>\n----------------\n");
+#endif
 
             try
             {
@@ -19,11 +25,11 @@ namespace AMBExtract
                 {
                     //Console.WriteLine("Usage: Drag an AMB file to extract or drag a valid extraction directory to repack an AMB file.");
                     //Console.WriteLine("Command-line Usage: AMBExtract <AMB File> OR AMBExtract <Path>");
-                    Console.WriteLine("Usage: Drag an AMB file to extract contents. Repacking AMBs is not supported at this time.");
+                    Console.WriteLine("Usage: Drag one or more AMB files to extract contents. **Repacking AMBs is not supported at this time.");
                     Console.WriteLine("Command-line Usage: AMBExtract <AMB File>");
 
-                    Console.WriteLine("\nExiting in 3 seconds...");
-                    Thread.Sleep(3000);
+                    Console.WriteLine("\nExiting in 5 seconds...");
+                    Thread.Sleep(5000);
                     Environment.Exit(0);
                 }
 
@@ -66,8 +72,12 @@ namespace AMBExtract
                     throw new Exception("AMBExtract was unable to parse the given argument(s)");
                 }
 
-                Log.PrintInfo("Complete! Exiting in 3 seconds...");
-                Thread.Sleep(3000);
+                Log.PrintInfo("Complete!");
+#if DEBUG
+                Console.ReadLine();
+#elif STAGING
+                Console.ReadLine();
+#endif
             }
             catch (Exception ex)
             {

@@ -3,6 +3,8 @@ using DimpsSonicLib.IO;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Timers;
 
 namespace DimpsSonicLib.Archives
 {
@@ -89,15 +91,16 @@ namespace DimpsSonicLib.Archives
 
         #region Extraction
         /// <summary>
-        /// Extracts a Sonic 4: Episode I OBB. Not implemented due to proprietary compression type.
+        /// Extracts a Sonic 4: Episode I OBB. Not implemented due to proprietary compression format.
         /// </summary>
         /// <param name="input">Takes in file path argument</param>
         /// <param name="baseDir">Takes in a base directory path for writing files</param>
         private static void ExtractDTRZFile(string input, string baseDir)
         {
-            throw new NotImplementedException(" DZIP compressed OBBs are not currently supported. Please use the official "
-                + "dzip.exe tool\n available in the Marmalade SDK: https://www.madewithmarmalade.com/developer");
+            throw new NotImplementedException(" DZIP compressed OBBs are not currently supported. Please use the official"
+                + " dzip.exe tool\n available in the Marmalade SDK: https://www.madewithmarmalade.com/developer");
         }
+
 
         /// <summary>
         /// Extracts Sega Forever versions of Sonic 4: Episode II OBB files.
@@ -118,6 +121,7 @@ namespace DimpsSonicLib.Archives
             uint nameTablePointer = reader.ReadUInt32();
             uint nameTableLength = reader.ReadUInt32();
             reader.JumpTo(listPointer);
+
 
             for (int i = 0; i < fileCount; i++)
             {
@@ -142,11 +146,23 @@ namespace DimpsSonicLib.Archives
                 // Write everything to disk
                 var newDir = baseDir + @"\" + dirName;
                 Directory.CreateDirectory(newDir);
-                Log.Print("Writing \"" + newDir + @"\" + fileName + "\"");
+
+
+                double percent = (double)(i + 1) / (double)fileCount;
+                int totalBlocks = 50;
+                int progressBlocks = (int)(percent * totalBlocks);
+
+                string bar = string.Format("Progress: {0}{1} {2,3}%  ({3} of {4} files extracted)\r",
+                    new string('█', progressBlocks), new string('▒', totalBlocks - progressBlocks), (int)(percent * 100), i + 1, fileCount);
+
+                Console.Write(bar);
+
+
                 File.WriteAllBytes((newDir + @"\" + fileName), bytes);
                 reader.JumpTo(lastIndexPos);
             }
         }
+
 
         /// <summary>
         /// Extracts Pre-Sega Forever versions of Sonic 4: Episode II OBB files.
@@ -191,7 +207,18 @@ namespace DimpsSonicLib.Archives
                 //write everything to disk
                 var newDir = baseDir + @"\" + dirName;
                 Directory.CreateDirectory(newDir);
-                Log.Print("Writing \"" + newDir + @"\" + fileName + "\"");
+
+
+                double percent = (double)(i + 1) / (double)fileCount;
+                int totalBlocks = 50;
+                int progressBlocks = (int)(percent * totalBlocks);
+
+                string bar = string.Format("Progress: {0}{1} {2,3}%  ({3} of {4} files extracted)\r",
+                    new string('█', progressBlocks), new string('▒', totalBlocks - progressBlocks), (int)(percent * 100), i + 1, fileCount);
+
+                Console.Write(bar);
+
+
                 File.WriteAllBytes((newDir + @"\" + fileName), bytes);
                 reader.JumpTo(lastIndexPos);
             }
