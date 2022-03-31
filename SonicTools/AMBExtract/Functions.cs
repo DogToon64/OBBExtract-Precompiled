@@ -55,11 +55,16 @@ namespace AMBExtract
 
 
 
-                // Extract data
+                // Extract file data
                 for (int i = 0; i < (int)binder.SubHeader.fileCount; i++)
                 {
                     bool error = false;
-                    string fileName = binder.FileSys.Count != 0 && binder.FileSys[i] != "" ? binder.FileSys[i] : $"file_{i}.bin";
+
+                    // Grab the file name, but replace any instance of ".\" with "_\" as this would be an invalid directory to Windows
+                    string fileName = binder.FileSys.Count != 0 && binder.FileSys[i] != "" ? binder.FileSys[i].Replace(".\\", "_\\") : $"file_{i}.bin";   
+                    
+                    // Isolate the internal directory if any, then create it before writing the file.
+                    Directory.CreateDirectory(newDir + "\\" + fileName.Replace(Path.GetFileName(fileName), ""));
 
                     Console.WriteLine("Extracting \"{0}\"", fileName);
 
@@ -129,7 +134,7 @@ namespace AMBExtract
             {
                 throw new Exception("Binder repacking not yet implemented!\n");
 
-                // Try get either index binary or read from original.
+                // Try to get either index binary or read from original.
 
                 // If above fails, generate a brand new file after user prompt (can be silenced)
 

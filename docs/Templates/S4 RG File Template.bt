@@ -33,7 +33,7 @@ typedef struct RingData
                     {
                         ubyte pos_x         <name="Pos X", bgcolor=cYellow>;
                         ubyte pos_y         <name="Pos Y", bgcolor=cYellow>;
-                    }Ring<name="Ring">;
+                    }Ring<name="Ring", comment="X=255 is a NoCreate flag">;
                 }
             }
 

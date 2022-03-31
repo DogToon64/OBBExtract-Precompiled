@@ -45,4 +45,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Formats\Audio\" />
+    <Folder Include="Formats\MAP\" />
+    <Folder Include="Formats\Parameter\" />
+    <Folder Include="Formats\SetData\" />
+    <Folder Include="Formats\Collision\" />
+  </ItemGroup>
+
 </Project>

@@ -53,7 +53,7 @@ namespace DimpsSonicLib.IO
 
 
         #region Dimps RLE 
-        public static byte[] NitroRLEncode(byte[] input)
+        public static byte[] RunLengthEncode(byte[] input)
         {
             // ...
 
@@ -61,7 +61,7 @@ namespace DimpsSonicLib.IO
             // return encodedData;
         }
 
-        public static byte[] NitroRLDecode(byte[] input)
+        public static byte[] RunLengthDecode(byte[] input)
         {
             // ...
 
@@ -69,7 +69,14 @@ namespace DimpsSonicLib.IO
             // return decodedData; 
         }
 
+        private static void ParseRLHeader(uint header)
+        {            
+            // ...
+
+
+        }
 
         #endregion
     }
 }
+
