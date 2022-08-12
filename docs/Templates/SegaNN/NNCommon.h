@@ -40,9 +40,9 @@ typedef struct VECTOR3INT
     int Y                   <name="Y", hidden=true>;
     int Z                   <name="Z", hidden=true>;
 
-    local int X_BAM = X * (180 / 32767);
-    local int Y_BAM = Y * (180 / 32767);
-    local int Z_BAM = Z * (180 / 32767);
+    local float X_BAM = X * (180 / 32767);
+    local float Y_BAM = Y * (180 / 32767);
+    local float Z_BAM = Z * (180 / 32767);
 };
 
 
