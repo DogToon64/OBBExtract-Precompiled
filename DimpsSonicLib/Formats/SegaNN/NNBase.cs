@@ -208,7 +208,7 @@ namespace DimpsSonicLib.Formats.SegaNN
         }
     }
 
-    // N*MA; Animation
+    // N*MA; Material animation
     public class NN_VERTEXANIMATION : NN_CHUNKBASE
     {
         public string chunkID { get; set; }
