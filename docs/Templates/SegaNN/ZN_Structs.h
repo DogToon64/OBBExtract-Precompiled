@@ -328,11 +328,12 @@ typedef struct ZNO_MESH
 typedef struct ZNO_MESHSET
 {
     local int ii                        <hidden=true>;
-
-    //01 01 = static meshes with textures (Max one bone per mesh)
-    //01 02 = weighted meshes with textures (More than one bone per mesh)
-    //01 04 = unknown (Static mesh + ??)
-    //02 01 = static mesh with no textures
+    
+    // Static meshes contain only one bone, Weighted meshes can have multiple
+    // 01 01 = static meshes with textures 
+    // 01 02 = weighted meshes with textures 
+    // 01 04 = static meshes with textures (Punchthrough)
+    // 02 01 = static meshes with no textures
     uint meshSetFlags                   <name="Mesh Flags">;
 
     uint meshCount                      <name="Mesh Count">;
