@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DimpsSonicLib.Formats.SetData
+namespace DimpsSonicLib.Formats.2D.SetData
 {
     public class Ring
     {
