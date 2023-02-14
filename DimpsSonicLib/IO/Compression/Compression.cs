@@ -10,6 +10,7 @@ namespace DimpsSonicLib.IO
 {
     public class Compression
     {
+        // TODO: Replace SharpZipLib entirely.
         #region zlib
         /// <summary>
         /// Compresses an array of bytes using zlib
