@@ -92,6 +92,7 @@ namespace DimpsSonicLib.Formats.SegaNN
         public string chunkID { get; set; }
         public dynamic chunkSize { get; set; }
         public uint pointerCount { get; set; }
+        public uint[] pointers { get; set; } // ?
 
         public NN_OFFSETLIST() { }
 
@@ -105,7 +106,7 @@ namespace DimpsSonicLib.Formats.SegaNN
 
             reader.JumpAhead(4);
 
-            uint[] pointers = new uint[pointerCount];
+            pointers = new uint[pointerCount];
 
             for (int i = 0; i < pointerCount; i++)
                 pointers[i] = reader.ReadUInt32();
@@ -223,4 +224,13 @@ namespace DimpsSonicLib.Formats.SegaNN
         }
     }
 
+
+    // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+
+
+    // NN Texture (Do I need this here? )
+    public class NN_TEXTURE
+    {
+        // *cough* 🦗
+    }
 }

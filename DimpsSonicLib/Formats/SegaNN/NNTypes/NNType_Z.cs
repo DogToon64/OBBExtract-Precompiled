@@ -8,13 +8,44 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
 {
     public class NNZ_TEXTURELIST : NN_TEXTURELIST
     {
+        public uint texCountPtr;
+        public uint unknown1;
+        public uint texCount;
+        public uint unknown2;
+
         public override void Read(ExtendedBinaryReader reader)
         {
             chunkID = reader.ReadSignature();
             chunkSize = reader.ReadUInt32();
             long jump = reader.BaseStream.Position;
+            
+            texCountPtr = reader.ReadUInt32();
 
-            reader.JumpAhead(chunkSize);
+            reader.JumpTo(texCountPtr + 28);
+            unknown1 = reader.ReadUInt32();
+            texCount = reader.ReadUInt32();
+            unknown2 = reader.ReadUInt32();
+
+            reader.JumpTo(jump + 4);
+
+            for (int i = 0; i < texCount; i++)
+            {
+                /* ZNO_TEXTURE properties
+                    uint unknown1
+                    uint unknown2
+                    uint nameOfst
+                    short filter1 (NNE_MIN Type?)
+                    short filter2 (NNE_MAG Type?)
+                    uint unkown3
+
+                    (JumpTo) 
+                    string texName
+                    (JumpBack)
+                */
+            }
+
+            //reader.JumpAhead(chunkSize);
+            reader.JumpTo(jump + chunkSize);
         }
     }
 
