@@ -31,75 +31,85 @@ namespace CmdTest
             // Print various data to console to check if parsing correctly
             PrintData(nnFile);
 
+            Console.ReadLine();
+
             // Typecast to access format-specific data not exposed by NNBase
             //var nnzTextures = (NNZ_TEXTURELIST)nnFile.Textures;
         }
 
 
 
-
         private static void PrintData(NNFile nnFile)
         {
+            //  NN_INFO  //
             Console.WriteLine("\nNinja Info           [{0}]\nChunk Size          : {1}\n" +
                 "Chunk Count         : {2}\nData Pointer        : {3}\nData Size           : {4}\n" +
                 "Offset List Pointer : {5}\nOffset List Size    : {6}\nVersion             : {7}",
-                nnFile.Info.chunkID, nnFile.Info.chunkSize, nnFile.Info.chunkCount, nnFile.Info.dataPointer,
-                nnFile.Info.dataSize, nnFile.Info.offsetListPointer, nnFile.Info.offsetListSize, nnFile.Info.version);
+                nnFile.Info.ChunkID, nnFile.Info.ChunkSize, nnFile.Info.ChunkCount, nnFile.Info.DataPointer,
+                nnFile.Info.DataSize, nnFile.Info.OffsetListPointer, nnFile.Info.OffsetListSize, nnFile.Info.Version);
 
-            if (nnFile.Textures.chunkID != null)
+            //  NN_TEXTURELIST  //
+            if (nnFile.Textures.ChunkID != null)
             {
                 Console.WriteLine("\nNinja Texture List   [{0}]\nChunk Size          : {1}",
-                    nnFile.Textures.chunkID, nnFile.Textures.chunkSize);
+                    nnFile.Textures.ChunkID, nnFile.Textures.ChunkSize);
 
-                // Typecast to access format-specific data not exposed by NNBase
+                // Typecast to NNZ
                 var nnzTextures = (NNZ_TEXTURELIST)nnFile.Textures;
 
-                Console.WriteLine("TexCount Pointer    : {0}\nTexture Count       : {1}\nFirst Texture Name  : {2}\n",
-                    nnzTextures.texCountPtr, nnzTextures.texCount, nnzTextures.TexList[0].texName);
+                Console.WriteLine("TexCount Pointer    : {0}\nTexture Count       : {1}\nFirst Texture Name  : {2}",
+                    nnzTextures.texCountPtr, nnzTextures.texCount, nnzTextures.TexList[0].TexName);
             }
 
-            if (nnFile.NodeNames.chunkID != null)
+            //  NN_NODENAMELIST  //
+            if (nnFile.NodeNames.ChunkID != null)
             {
                 Console.WriteLine("\nNinja Node Names     [{0}]\nChunk Size          : {1}",
-                    nnFile.NodeNames.chunkID, nnFile.NodeNames.chunkSize);
+                    nnFile.NodeNames.ChunkID, nnFile.NodeNames.ChunkSize);
             }
 
-            if (nnFile.Effect.chunkID != null)
+            //  NN_EFFECT  //
+            if (nnFile.Effect.ChunkID != null)
             {
                 Console.WriteLine("\nNinja Effect         [{0}]\nChunk Size          : {1}",
-                    nnFile.Effect.chunkID, nnFile.Effect.chunkSize);
+                    nnFile.Effect.ChunkID, nnFile.Effect.ChunkSize);
             }
 
-            if (nnFile.Mesh.chunkID != null)
+            //  NN_OBJECT  //
+            if (nnFile.Mesh.ChunkID != null)
             {
                 Console.WriteLine("\nNinja Object         [{0}]\nChunk Size          : {1}",
-                    nnFile.Mesh.chunkID, nnFile.Mesh.chunkSize);
+                    nnFile.Mesh.ChunkID, nnFile.Mesh.ChunkSize);
             }
 
-            if (nnFile.Motion.chunkID != null)
+            //  NN_MOTION  //
+            if (nnFile.Motion.ChunkID != null)
             {
                 Console.WriteLine("\nNinja Motion         [{0}]\nChunk Size          : {1}",
-                    nnFile.Motion.chunkID, nnFile.Motion.chunkSize);
+                    nnFile.Motion.ChunkID, nnFile.Motion.ChunkSize);
             }
 
-            if (nnFile.VertexAnim.chunkID != null)
+            //  NN_VERTEXANIMATION  //
+            if (nnFile.VertexAnim.ChunkID != null)
             {
                 Console.WriteLine("\nNinja Vertex Motion  [{0}]\nChunk Size          : {1}",
-                    nnFile.VertexAnim.chunkID, nnFile.VertexAnim.chunkSize);
+                    nnFile.VertexAnim.ChunkID, nnFile.VertexAnim.ChunkSize);
             }
 
-            if (nnFile.OffsetList.chunkID != null)
+            //  NN_OFFSETLIST  //
+            if (nnFile.OffsetList.ChunkID != null)
             {
                 Console.WriteLine("\nNinja Offset List    [{0}]\nChunk Size          : {1}" +
                     "\nPointer Count       : {2}",
-                    nnFile.OffsetList.chunkID, nnFile.OffsetList.chunkSize, nnFile.OffsetList.pointerCount);
+                    nnFile.OffsetList.ChunkID, nnFile.OffsetList.ChunkSize, nnFile.OffsetList.PointerCount);
             }
 
-            if (nnFile.Footer.chunkID != null)
+            //  NN_FILENAME  //
+            if (nnFile.Footer.ChunkID != null)
             {
                 Console.WriteLine("\nNinja File Name      [{0}]\nChunk Size          : {1}" +
                     "\nFile Name           : {2}",
-                    nnFile.Footer.chunkID, nnFile.Footer.chunkSize, nnFile.Footer.fileName);
+                    nnFile.Footer.ChunkID, nnFile.Footer.ChunkSize, nnFile.Footer.FileName);
             }
         }
     }

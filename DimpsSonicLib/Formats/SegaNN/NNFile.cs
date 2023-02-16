@@ -95,7 +95,7 @@ namespace DimpsSonicLib.Formats.SegaNN
             Info.Read(this);
 
             // Determine the format we're reading from the info chunk's signature
-            NNTYPE type = GetNNTYPE(Info.chunkID);
+            NNTYPE type = GetNNTYPE(Info.ChunkID);
 
             if (type == NNTYPE.Unknown)
             {
@@ -103,10 +103,10 @@ namespace DimpsSonicLib.Formats.SegaNN
                 goto SkipNNRead;
             }
 
-            JumpTo(Info.dataPointer);
+            JumpTo(Info.DataPointer);
 
             // Read all chunks in the file
-            for (int i = 0; i < Info.chunkCount; i++)
+            for (int i = 0; i < Info.ChunkCount; i++)
             {
                 string identifier = ReadSignature();
                 JumpBehind(4);
@@ -155,7 +155,7 @@ namespace DimpsSonicLib.Formats.SegaNN
                 }
             }
 
-            JumpTo(Info.offsetListPointer);
+            JumpTo(Info.OffsetListPointer);
 
             Log.PrintInfo("Reading offset list");
             OffsetList.Read(this);

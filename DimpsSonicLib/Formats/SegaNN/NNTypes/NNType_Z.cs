@@ -6,6 +6,7 @@ using DimpsSonicLib.IO;
 
 namespace DimpsSonicLib.Formats.SegaNN.NNTypes
 {
+    //  NZTL; Texture list  //
     public class NNZ_TEXTURELIST : NN_TEXTURELIST
     {
         public uint texCountPtr;
@@ -16,8 +17,8 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
 
         public override void Read(ExtendedBinaryReader reader)
         {
-            chunkID = reader.ReadSignature();
-            chunkSize = reader.ReadUInt32();
+            ChunkID = reader.ReadSignature();
+            ChunkSize = reader.ReadUInt32();
             long jump = reader.BaseStream.Position;
             
             texCountPtr = reader.ReadUInt32();
@@ -33,39 +34,51 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
             {
                 TexList.Add(new NNZ_TEXTURE()
                 {
-                    unknown1 = reader.ReadUInt32(),
-                    unknown2 = reader.ReadUInt32(),
-                    nameOfst = reader.ReadUInt32(),
-                    filter1 = reader.ReadInt16(),
-                    filter2 = reader.ReadInt16(),
-                    unknown3 = reader.ReadUInt32(),
+                    Unknown1 = reader.ReadUInt32(),
+                    Unknown2 = reader.ReadUInt32(),
+                    NameOfst = reader.ReadUInt32(),
+                    Filter1 = reader.ReadInt16(),
+                    Filter2 = reader.ReadInt16(),
+                    Unknown3 = reader.ReadUInt32(),
                 });
 
                 // Why the fuck didn't they store names on an index like they did for Nodes???
                 // I really don't want to assume they wrote the names in the same order
                 long jump2 = reader.BaseStream.Position;
-                reader.JumpTo(32 + TexList[i].nameOfst);
-                TexList[i].texName = reader.ReadNullTerminatedString();
+                reader.JumpTo(32 + TexList[i].NameOfst);
+                TexList[i].TexName = reader.ReadNullTerminatedString();
                 reader.JumpTo(jump2);
             }
 
-            //reader.JumpAhead(chunkSize);
-            reader.JumpTo(jump + chunkSize);
+            //reader.JumpAhead(ChunkSize);
+            reader.JumpTo(jump + ChunkSize);
+        }
+
+        public override void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 
+    //  NZNN; Node (bone) name list  //
     public class NNZ_NODENAMELIST : NN_NODENAMELIST
     {
         public override void Read(ExtendedBinaryReader reader)
         {
-            chunkID = reader.ReadSignature();
-            chunkSize = reader.ReadUInt32();
+            ChunkID = reader.ReadSignature();
+            ChunkSize = reader.ReadUInt32();
             long jump = reader.BaseStream.Position;
 
-            reader.JumpAhead(chunkSize);
+            reader.JumpAhead(ChunkSize);
+        }
+
+        public override void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 
+    //  NZOB; 3D model data  //
     public class NNZ_OBJECT : NN_OBJECT
     {
         public uint modelInfoPtr;
@@ -77,8 +90,8 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
 
         public override void Read(ExtendedBinaryReader reader)
         {
-            chunkID = reader.ReadSignature();
-            chunkSize = reader.ReadUInt32();
+            ChunkID = reader.ReadSignature();
+            ChunkSize = reader.ReadUInt32();
             long jump = reader.BaseStream.Position;
 
             modelInfoPtr = reader.ReadUInt32();
@@ -86,43 +99,66 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
             vertBufferLen = reader.ReadUInt32();
             vertBufferPtr = reader.ReadUInt32();
 
-            reader.JumpTo(jump + chunkSize);
+            reader.JumpTo(jump + ChunkSize);
+        }
+
+        public override void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 
+    //  NZMO; Animation  //
     public class NNZ_MOTION : NN_MOTION
     {
         public override void Read(ExtendedBinaryReader reader)
         {
-            chunkID = reader.ReadSignature();
-            chunkSize = reader.ReadUInt32();
+            ChunkID = reader.ReadSignature();
+            ChunkSize = reader.ReadUInt32();
             long jump = reader.BaseStream.Position;
 
-            reader.JumpAhead(chunkSize);
+            reader.JumpAhead(ChunkSize);
+        }
+
+        public override void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 
+    //  NZEF; Effect data  //
     public class NNZ_EFFECT : NN_EFFECT
     {
         public override void Read(ExtendedBinaryReader reader)
         {
-            chunkID = reader.ReadSignature();
-            chunkSize = reader.ReadUInt32();
+            ChunkID = reader.ReadSignature();
+            ChunkSize = reader.ReadUInt32();
             long jump = reader.BaseStream.Position;
 
-            reader.JumpAhead(chunkSize);
+            reader.JumpAhead(ChunkSize);
+        }
+
+        public override void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 
+    //  NZMA; Material animation  //
     public class NNZ_VERTEXANIMATION : NN_VERTEXANIMATION
     {
         public override void Read(ExtendedBinaryReader reader)
         {
-            chunkID = reader.ReadSignature();
-            chunkSize = reader.ReadUInt32();
+            ChunkID = reader.ReadSignature();
+            ChunkSize = reader.ReadUInt32();
             long jump = reader.BaseStream.Position;
 
-            reader.JumpAhead(chunkSize);
+            reader.JumpAhead(ChunkSize);
+        }
+
+        public override void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -132,12 +168,12 @@ namespace DimpsSonicLib.Formats.SegaNN.NNTypes
 
     public class NNZ_TEXTURE 
     {
-        public uint unknown1 { get; set; }
-        public uint unknown2 { get; set; }
-        public uint nameOfst { get; set; }
-        public short filter1 { get; set; } //(NNE_MIN Type?)
-        public short filter2 { get; set; } //(NNE_MAG Type?)
-        public uint unknown3 { get; set; }
-        public string texName { get; set; }
+        public uint Unknown1 { get; set; }
+        public uint Unknown2 { get; set; }
+        public uint NameOfst { get; set; }
+        public short Filter1 { get; set; } //(NNE_MIN Type?)
+        public short Filter2 { get; set; } //(NNE_MAG Type?)
+        public uint Unknown3 { get; set; }
+        public string TexName { get; set; }
     }
 }
