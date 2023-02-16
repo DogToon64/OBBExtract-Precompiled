@@ -2,6 +2,7 @@
 using System.IO;
 using DimpsSonicLib;
 using DimpsSonicLib.Formats.SegaNN;
+using DimpsSonicLib.Formats.SegaNN.NNTypes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,8 @@ namespace CmdTest
             // Print various data to console to check if parsing correctly
             PrintData(nnFile);
 
-
+            // Typecast to access format-specific data not exposed by NNBase
+            //var nnzTextures = (NNZ_TEXTURELIST)nnFile.Textures;
         }
 
 
@@ -48,6 +50,12 @@ namespace CmdTest
             {
                 Console.WriteLine("\nNinja Texture List   [{0}]\nChunk Size          : {1}",
                     nnFile.Textures.chunkID, nnFile.Textures.chunkSize);
+
+                // Typecast to access format-specific data not exposed by NNBase
+                var nnzTextures = (NNZ_TEXTURELIST)nnFile.Textures;
+
+                Console.WriteLine("TexCount Pointer    : {0}\nTexture Count       : {1}\nFirst Texture Name  : {2}\n",
+                    nnzTextures.texCountPtr, nnzTextures.texCount, nnzTextures.TexList[0].texName);
             }
 
             if (nnFile.NodeNames.chunkID != null)

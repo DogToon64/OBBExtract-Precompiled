@@ -57,6 +57,36 @@ namespace DimpsSonicLib.Formats.SegaNN
             VertexAnim  = new NN_VERTEXANIMATION();
         }
 
+        /* I tried something lmfao. If using, delete object assignment from ReadNNFile and unknown check.
+        public void Initialize_Alt()
+        {
+            // Base chunks to be populated from reading
+            Info = new NN_INFO();
+            OffsetList = new NN_OFFSETLIST();
+            Footer = new NN_FILENAME();
+
+            Log.PrintInfo("Reading file info");
+            Info.Read(this);
+            
+            NNTYPE type = GetNNTYPE(Info.chunkID);
+            if (type == NNTYPE.Unknown)
+            {
+                Log.PrintWarning("NNTYPE is unknown, this file format may not be supported yet.");
+                goto SkipNNRead2;
+            }
+            
+            // Init chunks as types detected
+            Mesh = NinjaObject(type);
+            Textures = NinjaTextureList(type);
+            NodeNames = NinjaNodeNames(type);
+            Effect = NinjaEffect(type);
+            Motion = NinjaMotion(type);
+            VertexAnim = NinjaVertexAnimation(type);
+
+        SkipNNRead2:;
+        }
+        */
+
         public void ReadNNFile()
         {
             Initialize();
@@ -135,8 +165,8 @@ namespace DimpsSonicLib.Formats.SegaNN
 
 
         SkipNNRead:;
-        }   
-        
+        }
+
 
         // Type handling
         public dynamic NinjaObject(NNTYPE t)
