@@ -6,6 +6,9 @@ using DimpsSonicLib;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
+// I really don't want to add support for LZ7, and *especially*
+// a specific archive format, but I may have to... :endme:
+
 namespace DimpsSonicLib.IO
 {
     public class Compression

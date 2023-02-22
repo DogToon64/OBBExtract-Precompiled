@@ -4,19 +4,27 @@ using System.Text;
 
 namespace DimpsSonicLib.Formats.Param
 {
-    public class HEADER 
+    public class GPB_BASE
     {
-        public const string signature = "GPB";
-        public uint version { get; set; } = 0;              // char version[4]; - File Version "1.1.0"
-        public string param_dataType { get; set; } = "";    // char[32]; Denotes the dataset contained
+        public const string Signature = "GPB";
+        public uint Version { get; set; }       // char version[4]; - File Version "1.1.0"
+        public string StructType { get; set; }  // char[32]; Denotes the dataset contained
 
-        public uint dataPtr { get; set; } = 0;
-        public uint structSize { get; set; } = 0;
-        public uint numStructs { get; set; } = 0;
-    }
+        public uint DataPtr { get; set; }
+        public uint StructSize { get; set; }
+        public uint StructCount { get; set; }
 
-    class GlobalParameter
-    {
+        public GPB_BASE() {  }
 
+
+        public virtual void Read(IO.ExtendedBinaryReader reader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void Write(IO.ExtendedBinaryWriter writer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

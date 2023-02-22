@@ -7,39 +7,39 @@ namespace DimpsSonicLib.Formats._2D.SetData
 {
     public class Header
     {
-        public byte width { get; set; } = 0;
-        public byte height { get; set; } = 0;
+        public byte Width { get; set; } = 0;
+        public byte Height { get; set; } = 0;
     }
 
     public class CellData
     {
-        public ushort count { get; set; } = 0;
+        public ushort Count { get; set; } = 0;
     }
 
     public class Ring
     {
-        public byte x { get; set; } = 0; //255 is NoCreate flag
-        public byte y { get; set; } = 0;
+        public byte X { get; set; } = 0; //255 is NoCreate flag
+        public byte Y { get; set; } = 0;
     }
 
     public class Decorate
     {
-        public byte x { get; set; } = 0;
-        public byte y { get; set; } = 0;
-        public ushort id { get; set; }
+        public byte X { get; set; } = 0;
+        public byte Y { get; set; } = 0;
+        public ushort ID { get; set; } // Game specific
     }
 
     public class Event
     {
-        public byte x { get; set; } = 0;
-        public byte y { get; set; } = 0;
-        public ushort id;
-        public ushort flag;
-        public sbyte offset_x;
-        public sbyte offset_y;
+        public byte X { get; set; } = 0;
+        public byte Y { get; set; } = 0;
+        public ushort ID; // Game specific
+        public ushort Flag; // Game specific
+        public sbyte OffsetX;
+        public sbyte OffsetY;
         public byte wParam;
         public byte hParam;
-        public ushort unknown; //always seems to be 0
+        public ushort Unknown; //always seems to be 0
     }
 
     // TODO: Add DF, MP, MD

@@ -108,8 +108,8 @@ namespace CmdTest
             if (nnFile.Footer.ChunkID != null)
             {
                 Console.WriteLine("\nNinja File Name      [{0}]\nChunk Size          : {1}" +
-                    "\nFile Name           : {2}",
-                    nnFile.Footer.ChunkID, nnFile.Footer.ChunkSize, nnFile.Footer.FileName);
+                    "\nFile Name           : {2}", nnFile.Footer.ChunkID, 
+                    nnFile.Footer.ChunkSize, nnFile.Footer.FileName);
             }
         }
     }

@@ -19,8 +19,9 @@ namespace CmdTest
                 {
 
                     ZNOReader.ReadZNO(args[0]);
-
-                    //zlibTest.zlibFunc(args);
+                    //SettingTest.ReadLTS(args[1]);
+                    //SettingTest.ReadMFS(args[2]);
+                    //zlibTest.zlibFunc(args[0]);
 
                 }
                 catch (Exception ex) { Console.WriteLine("Exception message: {0}\n\nException: {1}", ex.Message, ex); }
