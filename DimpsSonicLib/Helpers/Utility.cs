@@ -27,27 +27,36 @@ namespace DimpsSonicLib
         }
 
         /// <summary>
-        /// Creates a directory at the location of a file (string)
+        /// Returns a new directory at the location of a file (string)
         /// </summary>
-        /// <param name="file">The file's full path</param>
-        /// <param name="dirName">The name of the directory being created (E.g. "MyNewDirectoryName")</param>
+        /// <param name="file">The full path of file</param>
+        /// <param name="dirName">The name of the folder being created (E.g. "My New Folder")</param>
         /// <returns>The full path of the newly made directory</returns>
-        public static string CreateDirectoryAtFileLocation(string file, string dirName)
+        public static string CreateDirectoryAtFileLocation(string file, string dirName) // Change to NewFolderAtFilePath
         {
             var dir = Path.GetFullPath(file).Replace(Path.GetFileName(file), "") + dirName;
             //Console.WriteLine("Dir@FileLocation: " + dir);
             return dir;
         }
 
-        public static string CreateFolderFromFileName(string file, string targetDir = "", string append = "")
+        /// <summary>
+        /// Returns a new directory at the location of a file (string)
+        /// </summary>
+        /// <param name="file">The full path of file</param>
+        /// <param name="targetDir">Target directory to create the folder in</param>
+        /// <param name="append">Text to append to the folder name (E.g. "_extracted")</param>
+        /// <returns>The full path of the newly made directory</returns>
+        public static string CreateFolderFromFileName(string file, string targetDir = "", string append = "") // Change to NewFolderFromFile
         {
             string dir;
             var fileName = Path.GetFileNameWithoutExtension(file);
 
             if (targetDir != "")
                 dir = targetDir + "\\" + fileName + append;
+                //return targetDir + "\\" + fileName + append;
             else
                 dir = Path.GetFullPath(file).Replace(Path.GetFileName(file), "") + fileName + append;
+                //return Path.GetFullPath(file).Replace(Path.GetFileName(file), "") + fileName + append;
 
             //Console.WriteLine("FileFolder: " + dir);
             return dir;
@@ -56,12 +65,12 @@ namespace DimpsSonicLib
         /// <summary>
         /// Creates a directory at the program's root folder (string)
         /// </summary>
-        /// <param name="dirName">The name of the directory being created (E.g. "MyNewDirectoryName")</param>
+        /// <param name="dirName">The name of the folder being created (E.g. "My New Folder")</param>
         /// <returns>The full path of the newly made directory</returns>
-        public static string CreateDirectoryAtProgramLocation(string dirName)
+        public static string CreateDirectoryAtProgramLocation(string dirName) // Change to NewFolderAtProgramRoot
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + dirName;
-            Console.WriteLine("Dir@EXELocation: " + dir);
+            //Console.WriteLine("Dir@EXELocation: " + dir);
             return dir;
         }
 
