@@ -1,10 +1,9 @@
 //------------------------------------------------
 //  010 Editor v11.0.1 Binary Template
 //  Author: Kass(RadiantDerg) 2021-07-25
-//  Sonic 4 Episode 2 Android APK Expansion File (.obb)
+//  Sonic 4 Episode 2 Android APK Expansion File (.OBB)
 //  Please note this template has only been tested on versions 10050081 and 10050090
-//  This means this template will only work on the classic (non-Sega Ages) verions
-//  Adding support for the new versions shouldn't be too difficult, however.
+//  This means this template will only work on the classic (non-Sega Ages) versions
 //  Data is little endian
 //------------------------------------------------
 #include "../TemplateCommon/Utility.h"
