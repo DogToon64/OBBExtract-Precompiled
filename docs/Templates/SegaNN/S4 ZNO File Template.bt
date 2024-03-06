@@ -84,7 +84,7 @@ NEND g                                  <name="END", comment="Identifier: NEND">
 
 
 // Materials    = Done
-// Vertexes     = Done-ish
+// Vertexes     = Done-ish, needs logic for parsing vertex chunks
 // Faces        = Done
 // Bones        = Done
 // Unused Bones = Done

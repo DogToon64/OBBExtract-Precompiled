@@ -14,63 +14,65 @@
 /////  NN Types  /////
 typedef struct NNS_TEXCOORD
 {
-    float U                 <name="U COORD">;
-    float V                 <name="V COORD">;
+	float U                 <name="U COORD">;
+	float V                 <name="V COORD">;
 };
 
 typedef struct NNS_ROTATE_A16
 {
-    short X                 <name="X">;
-    short Y                 <name="Y">;
-    short Z                 <name="Z">;
+	short X                 <name="X">;
+	short Y                 <name="Y">;
+	short Z                 <name="Z">;
 };
 
 typedef struct NNS_ROTATE_A32
 {
-    int X                   <name="X">;
-    int Y                   <name="Y">;
-    int Z                   <name="Z">;
+	int X                   <name="X">;
+	int Y                   <name="Y">;
+	int Z                   <name="Z">;
 };
 
 typedef struct VECTOR3INT
 {
-    // BAM but they're storing short values as int
-    // This is probably just NNS_ROTATE_A32
-    int X                   <name="X", hidden=true>;
-    int Y                   <name="Y", hidden=true>;
-    int Z                   <name="Z", hidden=true>;
+	// BAM but they're storing short values as int32
+	// This is likely just NNS_ROTATE_A32
+	int X                   <name="X", hidden=true>;
+	int Y                   <name="Y", hidden=true>;
+	int Z                   <name="Z", hidden=true>;
 
-    local float X_BAM = X * (180 / 32767);
-    local float Y_BAM = Y * (180 / 32767);
-    local float Z_BAM = Z * (180 / 32767);
+	//local float X_BAM = X * (180 / 32767);
+	//local float Y_BAM = Y * (180 / 32767);
+	//local float Z_BAM = Z * (180 / 32767);
+	local float X_BAM = (float)360.0 / 32767 * X;
+	local float Y_BAM = (float)360.0 / 32767 * Y;
+	local float Z_BAM = (float)360.0 / 32767 * Z;
 };
 
-
+// = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
 /////  NN Common  /////
 struct NN_CHUNKBASE
 {
-    char header[4]                      <name="Chunk Identifier", bgcolor=cAqua>;
-    uint nextSize                       <name="Next Size", hidden=true, bgcolor=cSilver, comment="Size of THIS chunk from next read position">;
+	char header[4]                      <name="Chunk Identifier", bgcolor=cAqua>;
+	uint nextSize                       <name="Next Size", hidden=true, bgcolor=cSilver, comment="Size of THIS chunk from next read position">;
     
-    g_nextSize = nextSize;
+	g_nextSize = nextSize;
 };
 
 typedef struct NOF0 // Offset Table
 {
-    local int i                         <hidden=true>;
+	local int i                         <hidden=true>;
 
-    NN_CHUNKBASE a                      <hidden=true>;
-    lastPos = FTell();
+	NN_CHUNKBASE a                      <hidden=true>;
+	lastPos = FTell();
 
-    uint ptrCount                       <name="Pointer Count">; 
-    FSkip(4);
+	uint ptrCount                       <name="Pointer Count">; 
+	FSkip(4);
 
-    for (i = 0; i < ptrCount; i++)
-        uint ptrPointer                 <name="Pointer", bgcolor=cSilver>;
+	uint ptrPointer[ptrCount]			<name="Offset Pointers", bgcolor=cSilver>;
 
-    FSeek((lastPos + g_nextSize));
+	FSeek((lastPos + g_nextSize));
 };
 
 typedef struct NFN0 // Footer (Sometimes not required)

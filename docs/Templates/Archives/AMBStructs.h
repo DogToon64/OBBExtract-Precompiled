@@ -1,22 +1,32 @@
 //------------------------------------------------
 //  Header file for 010 Editor Binary Template
 //  Author: Kass(RadiantDerg) 2021-09-18
+//  Updated: 2023-12-16
 //  Dimps AmFS: Memory Binder (.AMB)
 //  /// Other license, not GPL 3.0! (Tentative) ///
 //------------------------------------------------
 #include "../TemplateCommon/Utility.h"
 
+// Template Read Helpers
+string EndianRead(byte  in)
+{
+	if (in == 1)
+		return "Big Endian";
+	else
+		return "Little Endian";
+}
+
 typedef struct Header
 {
     char   signature[4]                         <name="Signature", bgcolor=cWhite>;
-    uint   version                              <name="AMB File Version", bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
+    uint   version                              <name="File Version", bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
     ushort unkEditorVar1                        <name="?", hidden=true, bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
 	// Might be byte alignment? only used by their internal tool.
     ushort unkEditorVar2                        <name="?", hidden=true, bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
-    byte   isBigEndian                          <name="Endianness", bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
+    byte   isBigEndian                          <name="Endianness", read=EndianRead, bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
     byte   unkEditorVar3                        <name="?", hidden=true, bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
     byte   unkEditorVar4                        <name="?", hidden=true, bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
-    byte   compressionType                      <name="Compression Level", bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
+    byte   compressionType                      <name="Compression Type(?)", bgcolor=cSilver, comment="DIMPS EDITOR ONLY">;
 	
     g_version = version;
     g_compressionType = compressionType;

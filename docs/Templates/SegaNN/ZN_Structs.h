@@ -1,6 +1,8 @@
 //------------------------------------------------
 //  Header file for 010 Editor Binary Template
-//  Author: Kass(RadiantDerg) 2022-03-07
+//  Author: Kass(RadiantDerg)
+//  Created: 2022-03-07
+//  Updated: 2024-03-02
 //  Reference: DarioSamo, RadfordHound, Argx2121
 //  SegaNN ZN* Format (.ZNO, .ZNM, .ZNV, ect..)
 //  /// Other license, not GPL 3.0! ///
@@ -329,11 +331,17 @@ typedef struct ZNO_MESHSET
 {
     local int ii                        <hidden=true>;
     
-    // Static meshes contain only one bone, Weighted meshes can have multiple
-    // 01 01 = static meshes with textures 
-    // 01 02 = weighted meshes with textures 
-    // 01 04 = static meshes with textures (Punchthrough)
-    // 02 01 = static meshes with no textures
+	// Static meshes contain only one Node, Weighted meshes can have multiple
+
+    // Properties are literally irrelevant to sonic 4 wtf ????????????
+	// Type     : Static = 256, Weighted = 512
+	// Property : Opaque = 1, Transparent = 2, Punchthrough = 4
+
+    // 01 01 = static meshes with textures (Opaque) 			00000000 00000001	00000000 00000001
+    // 01 02 = weighted meshes with textures (Opaque) 			00000000 00000001	00000000 00000010
+    // 01 04 = static meshes with textures (Punchthrough) 		00000000 00000001	00000000 00000100
+    // 02 01 = static meshes with no textures (Transparent?) 	00000000 00000010	00000000 00000001
+	// 04 01 = unknown
     uint meshSetFlags                   <name="Mesh Flags">;
 
     uint meshCount                      <name="Mesh Count">;

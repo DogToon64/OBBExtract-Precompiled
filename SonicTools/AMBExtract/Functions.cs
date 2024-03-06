@@ -134,11 +134,12 @@ namespace AMBExtract
             {
                 throw new Exception("Binder repacking not yet implemented!\n");
 
-                // Try to get either index binary or read from original.
+                // Try to find original file in the same directory and read it's index.
 
                 // If above fails, generate a brand new file after user prompt (can be silenced)
+                // Raw file names may have index number (maybe even tags), so pack by that. (Ex: SomeFile.000.bin)
 
-                // Pack data from current list 
+                // Pack data
 
 
 

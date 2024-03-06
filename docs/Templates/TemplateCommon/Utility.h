@@ -1,6 +1,7 @@
 //------------------------------------------------
 //  Header file for 010 Editor Binary Template
 //  Author: Kass(RadiantDerg) 2022-03-07
+//  Updated: 2024-03-02
 //  Common Binary Template Utilities
 //  /// Other license, not GPL 3.0! (Tentative) ///
 //------------------------------------------------
@@ -9,11 +10,12 @@
 
 typedef struct FileData (uint dataLength)
 {
-    char fileDataStart                          <bgcolor=cYellow>;
-    char fileData[dataLength-2];
-    char fileDataEnd                            <bgcolor=cRed>;
+    char fileDataStart                          <bgcolor=cYellow, hidden=true>;
+    char fileData[dataLength-2]                 <hidden=true>;				
+    char fileDataEnd                            <bgcolor=cRed, hidden=true>;
 };
 
+// TODO: Rewrite this to be used outside of AMB format spec
 typedef struct CompressedData
 {
     local int64 fileLength                      <hidden=true> = FileSize();
