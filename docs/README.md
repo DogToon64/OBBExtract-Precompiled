@@ -1,18 +1,9 @@
-# DimpsSonicLib
- A work-in-progress library for modifying files found in 2.5D Sonic games developed by Dimps Corporation
-
- Please take a look at the [wiki](https://github.com/RadiantDerg/DimpsSonicLib/wiki)
-
-<!-- Perhaps move Sonic Tools to their own repository? -->
-## Sonic Tools
-  A collection of various small (usually command-line) tools utilizing DimpsSonicLib out of the box. Compiled versions of these tools can be found on the [Releases page](https://github.com/RadiantDerg/DimpsSonicLib/releases)
- 
-### **AMBExtract**:
-  Unpack/repack AMB files with this tool. Supports ***most*** AMB files, with the exception of AMBs in the Windows Phone port of Sonic The Hedgehog 4 Episode I
- 
-### **OBBExtract**:
-  Unpack Android APK Expansion (.obb) files with this tool. Supports OBB files from both paid and ad-supported versions of Sonic The Hedgehog 4 Episode II
+# OBBExtract
+  A tool for extracting Sonic the Hedgehog 4: Episode II's OBB file.
   
-  Episode I OBBs are currently unsupported due to the game using a proprietary closed-source file compression solution from Marmalade Game Studio
+  Sonic the Hedgehog 4: Episode I's OBBs are unsupported due to them using a different format. Use QuickBMS and the "vector.bms" script to extract it (it also works with the DZ files as well since they're the same format as the OBB file). (I will add links to both the tool and script later; the site isn't working as of this writing - hope it gets fixed soon.)
 
-  **Note:** *Re-packing the OBB files is not yet possible, however there are plans to add this feature later on once the format is better understood.*
+  **Note:** *Repacking the OBB files is not possible. I do not plan to add a repacking feature, especially since I'm not familiar with C#. Sorry, guys. :(*
+
+
+(Special thanks to a few members of the TSR Discord server for helping me compile this program!)
